@@ -7,8 +7,7 @@ OBJS = $(addprefix $(SRC_PATH)/, $(BASE_OBJS))
 LDLIBS = -lglfw3 -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lassimp
 
 GLEngine: $(OBJS)
-	$(CXX) $(CXXFLAGS) -o GLEngine $^ $(LDLIBS)
-
+	$(CXX) $(CXXFLAGS) -o GLEngine.app $^ $(LDLIBS)
 
 clean:
-	rm -f *(OBJS)
+	rm -f $(OBJS)
