@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
         Breakout.Update(deltaTime);
 
         //Rendering
-        glClearColor(0.0f,0.0f,0.0f, 1.0f);
+        glClearColor(0.992156f,0.2392156f,0.7098039f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         Breakout.Render();
 

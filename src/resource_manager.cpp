@@ -10,7 +10,6 @@
 std::map<std::string, Texture2D>    ResourceManager::Textures;
 std::map<std::string, Shader>       ResourceManager::Shaders;
 
-
 Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, std::string name)
 {
     Shaders[name] = loadShaderFromFile(vShaderFile, fShaderFile);
@@ -32,6 +31,8 @@ Texture2D ResourceManager::GetTexture(std::string name)
 {
     return Textures[name];
 }
+
+
 
 void ResourceManager::Clear()
 {
@@ -95,3 +96,4 @@ Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha)
     stbi_image_free(data);
     return texture;
 }
+
