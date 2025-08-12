@@ -1,6 +1,6 @@
-BASE_OBJS = GLEngine.o game.o Shader.o Texture.o Mesh.o Model.o resource_manager.o glad.o
+BASE_OBJS = GLEngine.o game.o Shader.o Texture.o resource_manager.o LevelLayout.o glad.o
 CXX = g++
-CXXFLAGS = -I/home/Destrea/Desktop/LearnOpenGL/include
+CXXFLAGS = -I/home/Jarod/Desktop/LearnOpenGL/GL_Engine/src/include
 SRC_PATH = src
 
 OBJS = $(addprefix $(SRC_PATH)/, $(BASE_OBJS))

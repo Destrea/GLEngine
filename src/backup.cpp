@@ -16,8 +16,11 @@ void processInput(GLFWwindow *window);
 
 unsigned int SCR_WIDTH = 1920;
 unsigned int SCR_HEIGHT = 1080;
-float screen_Scaling = 1.25;
-bool scaling = true;
+
+
+
+
+
 //Camera directions
 glm::vec3 cameraPos     = glm::vec3(0.0f,0.0f,3.0f);
 glm::vec3 cameraFront   = glm::vec3(0.0f,0.0f, -1.0f);

@@ -1,5 +1,11 @@
 
-Add Mesh/Model functionality to resource_manager.cpp/h
 
 
+Create a Camera class/cpp/h file
+    -Update camera class to ensure that movement is Normalized, and that you cant do FORWARD+BACKWARD or LEFT+RIGHT
+
+
+
+Complete LevelLoader functionality
+    (?)- Find a way to rework things to allow for non-euclidean geometry or rendering.
 

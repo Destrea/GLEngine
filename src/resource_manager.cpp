@@ -9,10 +9,10 @@
 
 std::map<std::string, Texture2D>    ResourceManager::Textures;
 std::map<std::string, Shader>       ResourceManager::Shaders;
-
-Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, std::string name)
+//std::map<std::string, Model>        ResourceManager::Models;
+Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name)
 {
-    Shaders[name] = loadShaderFromFile(vShaderFile, fShaderFile);
+    Shaders[name] = loadShaderFromFile(vShaderFile, fShaderFile, gShaderFile);
     return Shaders[name];
 }
 
@@ -33,7 +33,6 @@ Texture2D ResourceManager::GetTexture(std::string name)
 }
 
 
-
 void ResourceManager::Clear()
 {
     // Properly delete all shaders
@@ -44,7 +43,7 @@ void ResourceManager::Clear()
         glDeleteTextures(1, &iter.second.ID);
 }
 
-Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *fShaderFile)
+Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile)
 {
     std::string vertexCode;
     std::string fragmentCode;
