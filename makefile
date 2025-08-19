@@ -1,6 +1,6 @@
-BASE_OBJS = GLEngine.o game.o Shader.o Texture.o resource_manager.o LevelLayout.o glad.o
+BASE_OBJS = GLEngine.o game.o Shader.o Texture.o resource_manager.o LevelLayout.o glad.o imgui.o imgui_demo.o imgui_draw.o imgui_impl_glfw.o imgui_impl_opengl3.o imgui_tables.o imgui_widgets.o
 CXX = g++
-CXXFLAGS = -I/home/Jarod/Desktop/LearnOpenGL/GL_Engine/src/include
+CXXFLAGS = -I/home/Jarod/Desktop/GL_Engine/src/include -I/home/Jarod/Desktop/GL_Engine/src/include/ImGUI
 SRC_PATH = src
 
 OBJS = $(addprefix $(SRC_PATH)/, $(BASE_OBJS))
