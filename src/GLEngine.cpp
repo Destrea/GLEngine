@@ -4,43 +4,51 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "LevelLayout.h"
+#include "Common.h"
 #include "game.h"
 #include "include/Camera.h"
 #include "resource_manager.h"
 #include <iostream>
 #include "Model.h"
+//#include "ImguiLayer.h"
 #include <stb_image.h>
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow *window);
 
-void set_cursor(bool val);
-bool get_cursor();
+
+GLFWwindow* window;
 
 const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
 
-Camera camera(glm::vec3(0.0f,0.0f,3.0f));
+bool debug_mode;
+
+
+Camera p_Camera(glm::vec3(0.0f,0.0f,3.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
-bool cursor_locked;
 
-//DeltaTime variables
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
-
-
-//ImGui stuff
 
 Game Default(SCR_WIDTH, SCR_HEIGHT);
 
 int main(int argc, char *argv[])
 {
+    if(argc < 2 || argv[1] == "-d")
+    {
+        debug_mode = true;
+    }
+    else if(argv[1] == "-g")
+    {
+        debug_mode = false;
+    }
+
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -50,7 +58,7 @@ int main(int argc, char *argv[])
 #endif
     glfwWindowHint(GLFW_RESIZABLE, false);
 
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Default", nullptr, nullptr);
+    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Default", nullptr, nullptr);
     if(window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -66,7 +74,6 @@ int main(int argc, char *argv[])
     //glfwSetKeyCallback(window, key_callback);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    cursor_locked = true;
 
     //Glad: Load all OpenGL function pointers
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -95,21 +102,27 @@ int main(int argc, char *argv[])
     //setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    ImGui::LoadIniSettingsFromDisk("ImGuiConfig.ini");
+    static ImGuiIO& io = ImGui::GetIO(); (void) io;
+    ImGui::LoadIniSettingsFromDisk("imgui.ini");
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-    ImGui::SaveIniSettingsToDisk("ImGuiConfig.ini");
+    ImGui::SaveIniSettingsToDisk("imgui.ini");
 
 
+    ImGui::StyleColorsDark();
+    ImGuiStyle& style = ImGui::GetStyle();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable){
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
 
 
     //Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init();
-
+    ImGui_ImplOpenGL3_Init("#version 330");
+    InputManager::Get().set_cursor(true);
 
 
     //Model ourModel = ResourceManager::StoreModel("src/backpack/backpack.obj", "backpack");
@@ -122,6 +135,25 @@ int main(int argc, char *argv[])
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
+    Shader fb_shader = ResourceManager::LoadShader("src/Shaders/fb_shader.vs", "src/Shaders/fb_shader.fs", nullptr, "framebuff");
+
+
+    //Framebuffer generation, for creating the "game" viewport via ImGui
+
+    FramebuffManager::Get().init_framebuffer();
+
+
+
+
+    //Framebuffer texture
+
+
+
+
+
+
+
+
 
 
     //Initialize game
@@ -129,68 +161,101 @@ int main(int argc, char *argv[])
 
 
 
+
+
     while(!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
 
+
+        Default.calcDeltaTime();
+
+
         // Start the Dear ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-        ImGui::ShowDemoWindow(); // Show demo window! :)
 
 
-        //Calculate delta time
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        ImGuiManager::Get().ImGuiRender(window);
+        //ImGuiManager::Get().ShowDockSpaceAndMenu();
+
+        ImGui::Render();
+
+        //Split me into Game Input and Engine Input :)
+        Default.ProcessInput(window, &p_Camera);
+
+
+        GLuint fbo = FramebuffManager::Get().get_fbo();
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        one.Draw(ourShader,p_Camera);
 
 
 
-
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         //manage user input
         //Breakout.ProcessInput(deltaTime);
 
 
-        if(!io.WantCaptureMouse)
-        {
-            processInput(window);
-        }
+
 
         // update Game State
         //Default.Update(deltaTime);
 
         //Rendering
+        glClearColor(0.05f, 0.05f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-        //glClearColor(0.992156f,0.2392156f,0.7098039f, 1.0f);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         //Breakout.Render();
 
         //model = glm::scale(model, glm::vec3(1.0f,1.0f,1.0f));
 
-        one.Draw(ourShader,camera);
+
+
+
+        //ImGui_ImplOpenGL3_NewFrame();
+        //ImGui_ImplGlfw_NewFrame();
+
+        //
+
+
+        //unsigned int* fb_tex = &f_tex;
+        //
+
+
 
 
 
 
         //Default.Render();
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        //
+
+
+
+
+
+
+
+
+
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        if(io.ConfigFlags && ImGuiConfigFlags_ViewportsEnable)
         {
+            GLFWwindow * backup_current_context = glfwGetCurrentContext();
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();
-            // TODO for OpenGL: restore current GL context.
+            glfwMakeContextCurrent(backup_current_context);
         }
 
         glfwSwapBuffers(window);
 
-
-
     }
+
+    FramebuffManager::Get().fbo_shutdown();
 
 
     //ImGui shutdown processes
@@ -236,7 +301,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     float ypos = static_cast<float>(yposIn);
 
 
-    if(get_cursor() == true)
+    if(InputManager::Get().get_cursor() == true)
     {
 
         if(firstMouse)
@@ -252,72 +317,42 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
         lastX = xpos;
         lastY = ypos;
 
-        camera.ProcessMouseMovement(xoffset,yoffset);
+        p_Camera.ProcessMouseMovement(xoffset,yoffset);
     }
     else
     {
-        //If the mouse isnt locked, we update the x and y pos so that the camera doesnt whip when the mouse gets re-locked.
+        //If the mouse isnt locked, we update the x and y pos so that the p_Camera doesnt whip when the mouse gets re-locked.
         lastX = xpos;
         lastY = ypos;
 
     }
 
 }
+
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-
     ImGuiIO& io = ImGui::GetIO();
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && get_cursor() == false)
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && InputManager::Get().get_cursor() == false)
     {
-        std::cout << io.WantCaptureMouse << std::endl;
         if(io.WantCaptureMouse == false)
         {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            set_cursor(true);
+
         }
     }
-
-
-
 }
 
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    if(get_cursor() == true)
-        camera.ProcessMouseScroll(static_cast<float>(yoffset));
-}
-
-void processInput(GLFWwindow *window)
-{
-    if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS && get_cursor() == true)
-    {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        set_cursor(false);
-    }
-
-
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+    if(InputManager::Get().get_cursor() == true)
+        p_Camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
 
 
-void set_cursor(bool val)
-{
-    cursor_locked = val;
-}
 
-bool get_cursor()
+GLFWwindow *get_Window()
 {
-    return cursor_locked;
+    return window;
 }
 

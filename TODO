@@ -3,25 +3,22 @@
 3D collisions:
     - https://www.peroxide.dk/papers/collision/collision.pdf
     - Above is an (older) write up on collisions using vector-space calculations. This is relevant for D3D and OpenGL
-
     - Implement collisions using information from the level txt file, and implement collision for the player "body"/camera
 
-
-
 ImGui:
-    - Separate the ImGui integration to its own layer.
-    - Implement multi-viewport, and moving windows "out of" the main GLFW window, for flexibility.
-    - Create the first few main "windows", things like a console, settings menu, log window, etc.
-    - Ensure that Docking works correctly
     - Implement saving settings, docking layout, etc to the ini file correctly, and allow it to also be loaded
-    - Figure out how to "embed" the glfw window into a viewport in ImGui, similar to how it can be seen in other Engines.
-
+    - Implement a "preferences" menu, and saving the preferences, for font, font size, text color, etc.
 
 
 Level Editor:
     - using the ImGui integration, implement a "level editor" that can save the vertex, and texcoord, data to a specified .txt file,
         so that it can be used by LevelLoader afterwards.
+    - this can be done either using the "editor" window, or by creating a separate application. (Preferrably integrated with the editor)
 
 
 LevelLoader:
     (?)- Find a way to rework things to allow for non-euclidean geometry or rendering.
+
+
+Other:
+    - Migrate over to Cmake, and set up Cmake files that wwill download dependencies, and work platform agnostically.

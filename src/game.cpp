@@ -23,13 +23,26 @@ void Game::Update(float dt)
 
 }
 
-void Game::ProcessInput(float dt)
+void Game::ProcessInput(GLFWwindow* window, Camera* p_Cam)
 {
-
+    InputManager::Get().processInput(window, p_Cam, deltaTime);
 }
 
 void Game::Render()
 {
-    //ImGui Rendering stuff
 
+}
+
+
+void Game::calcDeltaTime()
+{
+    //Calculate delta time
+    float currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+}
+
+float Game::get_deltaTime()
+{
+    return deltaTime;
 }

@@ -1,0 +1,21 @@
+Changelog for GLEngine changes and modifications.
+Some changes may not line directly up with the date a commit, but tracking them in a file sounded like a good idea.
+
+
+8/20/2025
+=======================================================================================
+- Implemented Dear ImGui (docking) to an initial state. This currently includes a basic Editor window,
+    and some additional panes, that can be docked using the "DockSpace" functionality of Dear ImGui.
+- Additionally a menu bar was also added, and will later house many typical engine features, like saving,
+    importing, preferences, window options, etc.
+- Reworked the Input management, Framebuffer and Dear ImGui integration to all be their own Singletons.
+
+
+
+
+
+
+
+pre- 8/20/2025
+
+N/A (Will update later)

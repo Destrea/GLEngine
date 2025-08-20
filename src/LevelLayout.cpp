@@ -103,7 +103,7 @@ void printData()
 {
     for(int id = 0; id < Walls.size(); id++)
     {
-        std::cout << "attribData print: ";
+        //std::cout << "attribData print: ";
         for(int i = 0; i < 180; i++)
         {
             std::cout << " " << Walls[0].attribData[i] << " ";
@@ -119,7 +119,7 @@ int level::load_level(const char *path)
     FILE *f = fopen(path, "r");
     if(!f)
     {
-        std::cout << "ERROR::level File not loaded!" << std::endl;
+        //std::cout << "ERROR::level File not loaded!" << std::endl;
         return -1;
     }
 
@@ -137,7 +137,7 @@ int level::load_level(const char *path)
     char line[1024], buff[64];
     while(fgets(line, sizeof(line), f))
     {
-        std::cout << "Repeating..." << std::endl;
+        //std::cout << "Repeating..." << std::endl;
         const char *p = line;   //Pointer to our current line location
         while (isspace(*p)){     //Ignore whitespace
             p++;
@@ -207,11 +207,6 @@ int level::load_level(const char *path)
                         //Stores the vertex and texCoord attributes into the attribData value of the current "wall" object, for use by openGL to draw all the vertices, and to pass the texCoords to the fragment shader.
                         sscanf(l, "%f %f %f %f %f", &curWall.attribData[(i * 5)+0], &curWall.attribData[(i * 5)+1], &curWall.attribData[(i * 5)+2], &curWall.attribData[(i * 5) + 3], &curWall.attribData[(i * 5)+4]);
                         attSize += 5;
-                        for(int j = 0; j  < 5; j++)
-                        {
-                            std::cout << curWall.attribData[(i * 5)+j] <<" " << std::endl;
-                        }
-
                     }
 
                     Walls[curWall.id] = curWall;

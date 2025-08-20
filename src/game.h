@@ -1,13 +1,11 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "include/glad/glad.h"
-#include <GLFW/glfw3.h>
+#include "include/Common.h"
 
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
 
+#include "LevelLayout.h"
+#include "include/Camera.h"
 
 enum GameState {
     GAME_ACTIVE,
@@ -29,9 +27,20 @@ public:
     void Init(GLFWwindow* &My_Window);
 
     //Game loop
-    void ProcessInput(float dt);
+    void ProcessInput(GLFWwindow*, Camera* p_Cam);
     void Update(float dt);
     void Render();
+
+    void calcDeltaTime();
+    float get_deltaTime();
+
+
+private:
+
+    //DeltaTime variables
+    float deltaTime;
+    float lastFrame;
+
 };
 
 #endif
