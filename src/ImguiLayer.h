@@ -16,13 +16,21 @@ public:
     ImGuiManager(const ImGuiManager&) = delete;
     void ImGuiRender(GLFWwindow* window);
     void ShowDockSpaceAndMenu();
+<<<<<<< HEAD
 
+=======
+    void ShowLogWindow();
+>>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)
     static ImGuiManager& Get()
     {
         return s_Instance;
     }
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)
 private:
     ImGuiManager() { }
 
