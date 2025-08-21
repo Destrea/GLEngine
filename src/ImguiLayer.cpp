@@ -4,11 +4,7 @@
 
 //#include "ImguiLayer.h"
 //#include "FramebufferHandler.h"
-<<<<<<< HEAD
-#include "Common.h"
-=======
 #include "include/Common.h"
->>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)
 using namespace ImGui;
 
 //FramebuffManager& i_FramebuffMgr = FramebuffManager::Get();
@@ -21,10 +17,7 @@ void ImGuiManager::ImGuiRender(GLFWwindow* window)
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
     ShowDockSpaceAndMenu();
-<<<<<<< HEAD
-=======
     ShowLogWindow();
->>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)
 
 
     if(ImGui::Begin("Editor"))
@@ -126,8 +119,6 @@ void ImGuiManager::ShowDockSpaceAndMenu()
 }
 
 
-<<<<<<< HEAD
-=======
 struct AppLog
 {
     ImGuiTextBuffer     Buff;
@@ -267,4 +258,3 @@ void ImGuiManager::ShowLogWindow()
     log.Draw("Log");
 }
 
->>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)

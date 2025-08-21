@@ -4,26 +4,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "LevelLayout.h"
-<<<<<<< HEAD
-#include "Common.h"
-=======
 #include "include/Common.h"
->>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)
 #include "game.h"
 #include "include/Camera.h"
 #include "resource_manager.h"
 #include <iostream>
 #include "Model.h"
 //#include "ImguiLayer.h"
-<<<<<<< HEAD
-#include <stb_image.h>
-
-
-=======
 #include "stb_image.h"
 
 //Move some input callbacks into the InputManager.cpp file and call them with the pointer/singleton reference
->>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -109,11 +99,8 @@ int main(int argc, char *argv[])
     //setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-<<<<<<< HEAD
-=======
 
     //Setup Dear ImGui io handler and settings/config loading/saving
->>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)
     static ImGuiIO& io = ImGui::GetIO(); (void) io;
     ImGui::LoadIniSettingsFromDisk("imgui.ini");
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -134,42 +121,16 @@ int main(int argc, char *argv[])
     //Setup Platform/Renderer backends, with ImGui
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
-<<<<<<< HEAD
-    InputManager::Get().set_cursor(true);
-=======
 
     //Set initial cursor lock state.
     InputManager::Get().set_cursor(true);
 
->>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);        //For rendering tris as wireframes
 
 
-<<<<<<< HEAD
-    Shader fb_shader = ResourceManager::LoadShader("src/Shaders/fb_shader.vs", "src/Shaders/fb_shader.fs", nullptr, "framebuff");
-
-
-    //Framebuffer generation, for creating the "game" viewport via ImGui
-
-    FramebuffManager::Get().init_framebuffer();
-
-
-
-
-    //Framebuffer texture
-
-
-
-
-
-
-
-
-=======
     //Loads the framebuffer shader. Mostly just places it in a certain spot, using the vertex shader, and applying the "framebuffer's" content
     Shader fb_shader = ResourceManager::LoadShader("src/Shaders/fb_shader.vs", "src/Shaders/fb_shader.fs", nullptr, "framebuff");
->>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)
 
 
     //Framebuffer generation, for creating the "game" viewport via ImGui
@@ -178,42 +139,10 @@ int main(int argc, char *argv[])
     //Initialize game
     Default.Init(window);
 
-<<<<<<< HEAD
-
-
-
-
-=======
->>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)
     while(!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
 
-<<<<<<< HEAD
-
-        Default.calcDeltaTime();
-
-
-        // Start the Dear ImGui frame
-
-
-        ImGuiManager::Get().ImGuiRender(window);
-        //ImGuiManager::Get().ShowDockSpaceAndMenu();
-
-        ImGui::Render();
-
-        //Split me into Game Input and Engine Input :)
-        Default.ProcessInput(window, &p_Camera);
-
-
-        GLuint fbo = FramebuffManager::Get().get_fbo();
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        one.Draw(ourShader,p_Camera);
-=======
         //DeltaTime calculations, handled by Game.cpp
         Default.calcDeltaTime();
 
@@ -226,83 +155,30 @@ int main(int argc, char *argv[])
         //Manage and process user input.
         Default.ProcessInput(window, &p_Camera);
 
->>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)
 
         //Processes framebuffer for editor viewport
         GLuint fbo = FramebuffManager::Get().get_fbo();
 
-<<<<<<< HEAD
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-        //manage user input
-        //Breakout.ProcessInput(deltaTime);
-
-
-
-
-        // update Game State
-        //Default.Update(deltaTime);
-
-        //Rendering
-        glClearColor(0.05f, 0.05f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-
-        //Breakout.Render();
-=======
         //Bind the fbo
         glBindFramebuffer(GL_FRAMEBUFFER, fbo);
         //Add the editor background color, and clear the color and depth buffers
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
->>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)
 
         //Draw the level/model
         one.Draw(ourShader,p_Camera);
 
-<<<<<<< HEAD
-
-
-
-        //ImGui_ImplOpenGL3_NewFrame();
-        //ImGui_ImplGlfw_NewFrame();
-
-        //
-
-
-        //unsigned int* fb_tex = &f_tex;
-        //
-
-
-=======
         //unbind the fbo
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         //Rendering for the "engine's" background color
         glClearColor(0.05f, 0.05f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
->>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)
 
 
 
-
-<<<<<<< HEAD
-        //Default.Render();
 
         //
-
-
-
-
-
-
-
-
-
-=======
-        //
->>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         if(io.ConfigFlags && ImGuiConfigFlags_ViewportsEnable)
         {
@@ -316,10 +192,7 @@ int main(int argc, char *argv[])
 
     }
 
-<<<<<<< HEAD
-=======
     //Framebuffer unbinding + shutdown
->>>>>>> 4924f88 (Finished implementing Dear ImGui, reworked some systems into Singletons.)
     FramebuffManager::Get().fbo_shutdown();
 
 
