@@ -60,5 +60,20 @@ GLuint FramebuffManager::get_rbo()
 }
 
 
+void FramebuffManager::set_resolution(int width, int height)
+{
+    tex_w = width;
+    tex_h = height;
+    resolution = glm::vec2(tex_w,tex_h);
+}
+
+
+
+glm::vec2 FramebuffManager::get_resolution()
+{
+
+    return resolution;
+}
+
 
 

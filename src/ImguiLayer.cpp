@@ -40,6 +40,9 @@ void ImGuiManager::ImGuiRender(GLFWwindow* window)
         const float win_width = ImGui::GetContentRegionAvail().x;
         const float win_height = ImGui::GetContentRegionAvail().y;
 
+
+        i_FramebuffMgr.set_resolution(win_width, win_height);
+
         i_FramebuffMgr.rescale_framebuffer(win_width, win_height);
         glViewport(0,0, win_width, win_height);
 
@@ -86,9 +89,9 @@ void ImGuiManager::ImGuiRender(GLFWwindow* window)
     }
     ImGui::End();
 
+    LevelEditor::Get().DrawWindow();
 
-
-     ImGui::EndFrame();
+    ImGui::EndFrame();
 }
 
 

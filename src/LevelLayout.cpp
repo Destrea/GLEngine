@@ -76,11 +76,9 @@ void level::SetVars(Shader &shader)
 }
 
 
-void level::Draw(Shader &shader, Camera &camera)
+void level::Draw(Shader &shader, glm::mat4 projection, glm::mat4 view)
 {
 
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)800 / (float)600, 0.1f, 100.0f);
-    glm::mat4 view = camera.GetViewMatrix();
 
     shader.setMatrix4("projection",projection);
     shader.setMatrix4("view",view);

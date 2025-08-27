@@ -10,6 +10,7 @@
 #include "include/Common.h"
 
 #include "FramebufferHandler.h"
+#include "LevelEditor.h"
 class ImGuiManager
 {
 public:

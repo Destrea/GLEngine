@@ -18,6 +18,8 @@ public:
     int tex_w = 1280;
     int tex_h = 720;
 
+
+    glm::vec2 resolution = glm::vec2(tex_w, tex_h);
     //Framebuffer and depth buffer variables, along with the framebuffer texture
     GLuint f_tex;
     GLuint fbo;
@@ -32,7 +34,8 @@ public:
     GLuint get_fbo();
     GLuint get_rbo();
 
-
+    glm::vec2 get_resolution();
+    void set_resolution(int width, int height);
 
 
 private:
@@ -40,6 +43,7 @@ private:
     void set_fbo();
     void set_rbo();
     void set_fTex();
+
 
     //Constructor, for the singleton
     FramebuffManager() { }

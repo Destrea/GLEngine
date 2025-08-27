@@ -39,7 +39,7 @@ public:
     //wall-by-wall until the sector is built, before continuing on to the next sector in the list.
     void SetVars(Shader &shader);
 
-    void Draw(Shader &shader, Camera &camera);
+    void Draw(Shader &shader, glm::mat4 projection, glm::mat4 view);
     //Loads the level using the specified txt file at the path designated.
     static int load_level(const char *path);
 

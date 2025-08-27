@@ -10,7 +10,6 @@
 #include "resource_manager.h"
 #include <iostream>
 #include "Model.h"
-//#include "ImguiLayer.h"
 #include "stb_image.h"
 
 //Move some input callbacks into the InputManager.cpp file and call them with the pointer/singleton reference
@@ -58,7 +57,7 @@ int main(int argc, char *argv[])
 #endif
     glfwWindowHint(GLFW_RESIZABLE, false);
 
-    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Default", nullptr, nullptr);
+    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GLEngine Studio", nullptr, nullptr);
     if(window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -73,7 +72,7 @@ int main(int argc, char *argv[])
     glfwSetScrollCallback(window, scroll_callback);
     //glfwSetKeyCallback(window, key_callback);
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     //Glad: Load all OpenGL function pointers
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -156,6 +155,12 @@ int main(int argc, char *argv[])
         Default.ProcessInput(window, &p_Camera);
 
 
+        //Update the projection and view Matrices, so that upon resizing the editor window, the framebuffer scales correctly, instead of stretching or warping.
+        glm::vec2 resolution = FramebuffManager::Get().get_resolution();
+        glm::mat4 projection = glm::perspective(glm::radians(p_Camera.Zoom), resolution.x / resolution.y, 0.1f, 100.0f);
+        glm::mat4 view = p_Camera.GetViewMatrix();
+
+
         //Processes framebuffer for editor viewport
         GLuint fbo = FramebuffManager::Get().get_fbo();
 
@@ -165,8 +170,14 @@ int main(int argc, char *argv[])
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+
+
+
+
+
         //Draw the level/model
-        one.Draw(ourShader,p_Camera);
+        one.Draw(ourShader, projection, view);
 
         //unbind the fbo
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
