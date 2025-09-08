@@ -1,15 +1,17 @@
-#include "include/glad/glad.h"
+#include "../include/glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "LevelLayout.h"
-#include "include/Common.h"
-#include "game.h"
-#include "include/Camera.h"
-#include "resource_manager.h"
+#include "../include/LevelLayout.h"
+//#include "../include/Common.h"
+#include "../include/game.h"
+#include "../include/Camera.h"
+#include "../include/resource_manager.h"
 #include <iostream>
-#include "Model.h"
+//#include "../include/Model.h"
+#include "../include/ImguiLayer.h"
+#include "../include/InputManager.h"
 #include "stb_image.h"
 
 //Move some input callbacks into the InputManager.cpp file and call them with the pointer/singleton reference
@@ -57,7 +59,7 @@ int main(int argc, char *argv[])
 #endif
     glfwWindowHint(GLFW_RESIZABLE, false);
 
-    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GLEngine Studio", nullptr, nullptr);
+    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Default", nullptr, nullptr);
     if(window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -72,7 +74,7 @@ int main(int argc, char *argv[])
     glfwSetScrollCallback(window, scroll_callback);
     //glfwSetKeyCallback(window, key_callback);
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     //Glad: Load all OpenGL function pointers
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -86,11 +88,11 @@ int main(int argc, char *argv[])
 
 
     //Loads the shader for the level to be loaded.
-    Shader ourShader = ResourceManager::LoadShader("src/Shaders/3.3.shader.vs", "src/Shaders/3.3.shader.fs", nullptr, "wall");
+    Shader ourShader = ResourceManager::LoadShader("resources/Shaders/3.3.shader.vs", "resources/Shaders/3.3.shader.fs", nullptr, "wall");
 
     //Loads the level with Level Loader
     level one;
-    one.load_level("src/levels/Level1.txt");
+    one.load_level("resources/levels/Level1.txt");
 
     //Applies the shader to the loaded level mesh
     one.SetVars(ourShader);
@@ -129,7 +131,7 @@ int main(int argc, char *argv[])
 
 
     //Loads the framebuffer shader. Mostly just places it in a certain spot, using the vertex shader, and applying the "framebuffer's" content
-    Shader fb_shader = ResourceManager::LoadShader("src/Shaders/fb_shader.vs", "src/Shaders/fb_shader.fs", nullptr, "framebuff");
+    Shader fb_shader = ResourceManager::LoadShader("resources/Shaders/fb_shader.vs", "resources/Shaders/fb_shader.fs", nullptr, "framebuff");
 
 
     //Framebuffer generation, for creating the "game" viewport via ImGui
@@ -155,12 +157,6 @@ int main(int argc, char *argv[])
         Default.ProcessInput(window, &p_Camera);
 
 
-        //Update the projection and view Matrices, so that upon resizing the editor window, the framebuffer scales correctly, instead of stretching or warping.
-        glm::vec2 resolution = FramebuffManager::Get().get_resolution();
-        glm::mat4 projection = glm::perspective(glm::radians(p_Camera.Zoom), resolution.x / resolution.y, 0.1f, 100.0f);
-        glm::mat4 view = p_Camera.GetViewMatrix();
-
-
         //Processes framebuffer for editor viewport
         GLuint fbo = FramebuffManager::Get().get_fbo();
 
@@ -170,14 +166,8 @@ int main(int argc, char *argv[])
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-
-
-
-
-
         //Draw the level/model
-        one.Draw(ourShader, projection, view);
+        one.Draw(ourShader,p_Camera);
 
         //unbind the fbo
         glBindFramebuffer(GL_FRAMEBUFFER, 0);

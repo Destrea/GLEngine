@@ -1,6 +1,6 @@
 
-#include "include/Common.h"
-
+//#include "../include/Common.h"
+#include "../include/InputManager.h"
 
 InputManager InputManager::s_Instance;
 

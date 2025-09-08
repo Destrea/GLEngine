@@ -1,6 +1,6 @@
 //Level Layout
 
-#include "LevelLayout.h"
+#include "../include/LevelLayout.h"
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 
@@ -30,7 +30,7 @@ void level::SetVars(Shader &shader)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         stbi_set_flip_vertically_on_load(true);
         int width, height, nrChannels;
-        unsigned char *data = stbi_load("src/Textures/Debugempty.png", &width, &height, &nrChannels, 0);
+        unsigned char *data = stbi_load("resources/Textures/Debugempty.png", &width, &height, &nrChannels, 0);
         if(data)
         {
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -76,9 +76,11 @@ void level::SetVars(Shader &shader)
 }
 
 
-void level::Draw(Shader &shader, glm::mat4 projection, glm::mat4 view)
+void level::Draw(Shader &shader, Camera &camera)
 {
 
+    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)800 / (float)600, 0.1f, 100.0f);
+    glm::mat4 view = camera.GetViewMatrix();
 
     shader.setMatrix4("projection",projection);
     shader.setMatrix4("view",view);

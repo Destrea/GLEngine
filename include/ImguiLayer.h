@@ -1,0 +1,39 @@
+#ifndef IMGUIMGR_H
+#define IMGUIMGR_H
+
+#define IMGUI_DEFINE_MATH_OPERATORS
+#include "../extern/ImGui/imgui.h"
+#include "../extern/ImGui/imgui_impl_glfw.h"
+#include "../extern/ImGui/imgui_impl_opengl3.h"
+#include "../extern/ImGui/imgui_internal.h"
+
+#include "../include/Common.h"
+
+#include "FramebufferHandler.h"
+class ImGuiManager
+{
+public:
+    ImGuiManager(const ImGuiManager&) = delete;
+    void ImGuiRender(GLFWwindow* window);
+    void ShowDockSpaceAndMenu();
+    void ShowLogWindow();
+    static ImGuiManager& Get()
+    {
+        return s_Instance;
+    }
+
+
+
+private:
+    ImGuiManager() { }
+
+    static ImGuiManager s_Instance;
+
+    //FramebuffManager& i_FramebuffMgr = FramebuffManager::Get();
+
+};
+
+//ImGuiManager ImGuiManager::s_Instance;
+
+
+#endif

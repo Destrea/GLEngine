@@ -1,7 +1,6 @@
 //Framebuffer/Editor layer, for the engine.
 
-
-#include "include/Common.h"
+#include "../include/FramebufferHandler.h"
 
 FramebuffManager FramebuffManager::s_Instance;
 
@@ -59,21 +58,6 @@ GLuint FramebuffManager::get_rbo()
     return f_tex;
 }
 
-
-void FramebuffManager::set_resolution(int width, int height)
-{
-    tex_w = width;
-    tex_h = height;
-    resolution = glm::vec2(tex_w,tex_h);
-}
-
-
-
-glm::vec2 FramebuffManager::get_resolution()
-{
-
-    return resolution;
-}
 
 
 

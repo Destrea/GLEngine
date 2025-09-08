@@ -4,7 +4,9 @@
 
 //#include "ImguiLayer.h"
 //#include "FramebufferHandler.h"
-#include "include/Common.h"
+//#include "../include/Common.h"
+//#include <GLFW/glfw3.h>
+#include "../include/InputManager.h"
 using namespace ImGui;
 
 //FramebuffManager& i_FramebuffMgr = FramebuffManager::Get();
@@ -40,10 +42,7 @@ void ImGuiManager::ImGuiRender(GLFWwindow* window)
         const float win_width = ImGui::GetContentRegionAvail().x;
         const float win_height = ImGui::GetContentRegionAvail().y;
 
-
-        i_FramebuffMgr.set_resolution(win_width, win_height);
-
-        i_FramebuffMgr.rescale_framebuffer(win_width, win_height);
+        FramebuffManager::Get().rescale_framebuffer(win_width, win_height);
         glViewport(0,0, win_width, win_height);
 
 
@@ -51,13 +50,13 @@ void ImGuiManager::ImGuiRender(GLFWwindow* window)
         ImVec2 pos = ImGui::GetCursorScreenPos();
         ImVec2 centralizedCursorpos = (windowSize - pos) * 0.5f;
 
-        ImGui::SetCursorPos((GetContentRegionAvail() - ImVec2(i_FramebuffMgr.tex_w,i_FramebuffMgr.tex_h)) * 0.5f);
-        ImVec2 size = ImVec2(i_FramebuffMgr.tex_w,i_FramebuffMgr.tex_h);
+        ImGui::SetCursorPos((GetContentRegionAvail() - ImVec2(FramebuffManager::Get().tex_w,FramebuffManager::Get().tex_h)) * 0.5f);
+        ImVec2 size = ImVec2(FramebuffManager::Get().tex_w,FramebuffManager::Get().tex_h);
         ImVec2 uv0 = ImVec2(0,1);
         ImVec2 uv1 = ImVec2(1,0);
 
         //GLuint* texture = f_tex;
-        ImGui::Image((GLuint*)(intptr_t)i_FramebuffMgr.f_tex, size, uv0, uv1);
+        ImGui::Image((GLuint*)(intptr_t)FramebuffManager::Get().f_tex, size, uv0, uv1);
 
 
     }
@@ -66,8 +65,8 @@ void ImGuiManager::ImGuiRender(GLFWwindow* window)
     if(ImGui::Begin("New Window"))
     {
         ImGui::Text("This is a new Window");               // Display some text (you can use a format strings too)
-        ImGui::InputInt("Editor Width", &i_FramebuffMgr.tex_w, 1, 100, ImGuiInputTextFlags_CharsDecimal);
-        ImGui::InputInt("Editor Height", &i_FramebuffMgr.tex_h, 1, 100, ImGuiInputTextFlags_CharsDecimal);
+        ImGui::InputInt("Editor Width", &FramebuffManager::Get().tex_w, 1, 100, ImGuiInputTextFlags_CharsDecimal);
+        ImGui::InputInt("Editor Height", &FramebuffManager::Get().tex_h, 1, 100, ImGuiInputTextFlags_CharsDecimal);
 
     }
     ImGui::End();
@@ -82,16 +81,16 @@ void ImGuiManager::ImGuiRender(GLFWwindow* window)
 
     if(ImGui::Begin("OpenGL Texture Text"))
     {
-        ImGui::Text("pointer = %x", i_FramebuffMgr.f_tex);
-        ImGui::Text("size = %d x %d", i_FramebuffMgr.tex_w, i_FramebuffMgr.tex_h);
+        ImGui::Text("pointer = %x", FramebuffManager::Get().f_tex);
+        ImGui::Text("size = %d x %d", FramebuffManager::Get().tex_w, FramebuffManager::Get().tex_h);
         //ImGui::Image((ImTextureID)(intptr_t)f_tex, ImVec2(tex_w, tex_h));
 
     }
     ImGui::End();
 
-    LevelEditor::Get().DrawWindow();
 
-    ImGui::EndFrame();
+
+     ImGui::EndFrame();
 }
 
 
