@@ -13,27 +13,6 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
 endif()
 
-include(FetchContent)
-
-#adds glfw3
-FetchContent_Declare(
-    glfw
-    GIT_REPOSITORY https://github.com/glfw/glfw.git
-    GIT_TAG 3.4)
-FetchContent_MakeAvailable(glfw)
-
-FetchContent_Declare(
-    glm
-    GIT_REPOSITORY https://github.com/g-truc/glm.git
-    GIT_TAG 1.0.1)
-FetchContent_MakeAvailable(glm)
-
-#FetchContent_Declare(
-#    assimp
-#    GIT_REPOSITORY https://github.com/assimp/assimp.git
-#    GIT_TAG v6.0.2)
-#FetchContent_MakeAvailable(assimp)
-#Un-comment assimp once mesh.h/model.h are used or needed.
 
 add_executable(${PROJECT_NAME} "src/GLEngine.cpp")
 
@@ -42,6 +21,8 @@ target_compile_features(GLEngine PUBLIC cxx_std_11)
 #Source code is here
 add_subdirectory(src)
 add_subdirectory(include)
+add_subdirectory(extern/glfw-3.4)
+add_subdirectory(extern/glm-1.0.1)
 
 add_custom_target(copy_resources ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -57,8 +38,13 @@ target_include_directories(${PROJECT_NAME} PUBLIC ../extern/ImGui)
 target_include_directories(${PROJECT_NAME} PUBLIC ../include/glad)
 target_include_directories(${PROJECT_NAME} PUBLIC ../include/KHR)
 
+
+find_package(OpenGL REQUIRED)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC OpenGL::GL)
 target_link_libraries(${PROJECT_NAME} PUBLIC imgui)
 target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
+target_link_libraries(${PROJECT_NAME} PUBLIC glm)
 
 if(UNIX OR APPLE)
     find_package(X11)
