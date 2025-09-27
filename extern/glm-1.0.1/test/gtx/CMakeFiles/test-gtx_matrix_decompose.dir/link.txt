@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtx_matrix_decompose.dir/link.d "CMakeFiles/test-gtx_matrix_decompose.dir/gtx_matrix_decompose.cpp.o" -o test-gtx_matrix_decompose  ../../glm/libglm.a

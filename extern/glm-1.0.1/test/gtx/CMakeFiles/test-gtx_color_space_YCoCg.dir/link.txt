@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtx_color_space_YCoCg.dir/link.d "CMakeFiles/test-gtx_color_space_YCoCg.dir/gtx_color_space_YCoCg.cpp.o" -o test-gtx_color_space_YCoCg  ../../glm/libglm.a

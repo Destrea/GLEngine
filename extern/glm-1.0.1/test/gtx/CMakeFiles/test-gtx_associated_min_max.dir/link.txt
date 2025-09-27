@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtx_associated_min_max.dir/link.d "CMakeFiles/test-gtx_associated_min_max.dir/gtx_associated_min_max.cpp.o" -o test-gtx_associated_min_max  ../../glm/libglm.a

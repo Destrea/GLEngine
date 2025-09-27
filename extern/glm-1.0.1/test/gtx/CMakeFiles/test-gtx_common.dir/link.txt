@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtx_common.dir/link.d "CMakeFiles/test-gtx_common.dir/gtx_common.cpp.o" -o test-gtx_common  ../../glm/libglm.a

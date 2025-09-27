@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-core_setup_force_cxx03.dir/link.d "CMakeFiles/test-core_setup_force_cxx03.dir/core_setup_force_cxx03.cpp.o" -o test-core_setup_force_cxx03  ../../glm/libglm.a

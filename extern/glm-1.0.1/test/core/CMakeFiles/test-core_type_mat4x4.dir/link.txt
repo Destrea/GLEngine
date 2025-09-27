@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-core_type_mat4x4.dir/link.d "CMakeFiles/test-core_type_mat4x4.dir/core_type_mat4x4.cpp.o" -o test-core_type_mat4x4  ../../glm/libglm.a

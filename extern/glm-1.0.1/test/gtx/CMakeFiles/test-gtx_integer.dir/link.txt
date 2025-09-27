@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtx_integer.dir/link.d "CMakeFiles/test-gtx_integer.dir/gtx_integer.cpp.o" -o test-gtx_integer  ../../glm/libglm.a

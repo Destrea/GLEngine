@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-ext_matrix_int2x2_sized.dir/link.d "CMakeFiles/test-ext_matrix_int2x2_sized.dir/ext_matrix_int2x2_sized.cpp.o" -o test-ext_matrix_int2x2_sized  ../../glm/libglm.a

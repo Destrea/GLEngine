@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-ext_scalar_reciprocal.dir/link.d "CMakeFiles/test-ext_scalar_reciprocal.dir/ext_scalar_reciprocal.cpp.o" -o test-ext_scalar_reciprocal  ../../glm/libglm.a

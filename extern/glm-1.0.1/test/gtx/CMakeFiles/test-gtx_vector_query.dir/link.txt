@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtx_vector_query.dir/link.d "CMakeFiles/test-gtx_vector_query.dir/gtx_vector_query.cpp.o" -o test-gtx_vector_query  ../../glm/libglm.a

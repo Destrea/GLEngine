@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtx_normalize_dot.dir/link.d "CMakeFiles/test-gtx_normalize_dot.dir/gtx_normalize_dot.cpp.o" -o test-gtx_normalize_dot  ../../glm/libglm.a

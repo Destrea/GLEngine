@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-core_func_matrix.dir/link.d "CMakeFiles/test-core_func_matrix.dir/core_func_matrix.cpp.o" -o test-core_func_matrix  ../../glm/libglm.a
