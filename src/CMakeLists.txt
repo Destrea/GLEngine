@@ -1,6 +1,6 @@
 
 project(GLEngine)
-set(SOURCES "glad.c" "FramebufferHandler.cpp" "game.cpp" "GLEngine.cpp" "LevelLayout.cpp" "resource_manager.cpp" "Shader.cpp" "Texture.cpp" "InputManager.cpp" "ImguiLayer.cpp")
+set(SOURCES "glad.c" "FramebufferHandler.cpp" "game.cpp" "GLEngine.cpp" "LevelLayout.cpp" "LevelEditor.cpp" "resource_manager.cpp" "Shader.cpp" "Texture.cpp" "InputManager.cpp" "ImguiLayer.cpp")
 #set(HEADER_LIST "${GLEngine_SOURCE_DIR}/include")
 
 

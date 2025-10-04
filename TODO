@@ -13,7 +13,15 @@ ImGui:
 Level Editor:
     - using the ImGui integration, implement a "level editor" that can save the vertex, and texcoord, data to a specified .txt file,
         so that it can be used by LevelLoader afterwards.
-    - this can be done either using the "editor" window, or by creating a separate application. (Preferrably integrated with the editor)
+
+    Create "edge" drawing, between vertices
+    Each vertex between that edge drawn will correspond to a location value, x,y.
+        These locations will be the pixel location of the vertex, divided by 64 (the pixel width between grid corners), and each one will correspond to "0.5" length in OpenGL.
+        Additionally, for now, all Z values will be initialized so that the walls are properly square, with "1.0" distance between the floor and ceiling.
+            This willl eventually change, as the level editor becomes more fleshed out.
+
+
+
 
 
 LevelLoader:

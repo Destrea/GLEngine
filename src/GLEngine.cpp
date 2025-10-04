@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
     glfwSetScrollCallback(window, scroll_callback);
     //glfwSetKeyCallback(window, key_callback);
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     //Glad: Load all OpenGL function pointers
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
     ImGui_ImplOpenGL3_Init("#version 330");
 
     //Set initial cursor lock state.
-    InputManager::Get().set_cursor(true);
+    InputManager::Get().set_cursor(false);
 
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);        //For rendering tris as wireframes

@@ -7,6 +7,7 @@
 //#include "../include/Common.h"
 //#include <GLFW/glfw3.h>
 #include "../include/InputManager.h"
+#include "../include/LevelEditor.h"
 using namespace ImGui;
 
 //FramebuffManager& i_FramebuffMgr = FramebuffManager::Get();
@@ -88,7 +89,7 @@ void ImGuiManager::ImGuiRender(GLFWwindow* window)
     }
     ImGui::End();
 
-
+    LevelEditor::Get().DrawWindow();
 
      ImGui::EndFrame();
 }

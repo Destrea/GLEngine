@@ -1,7 +1,7 @@
 #ifndef LEVELEDITOR_H
 #define LEVELEDITOR_H
 
-#include "include/Common.h"
+#include "Common.h"
 #include <cstddef>
 
 class LevelEditor

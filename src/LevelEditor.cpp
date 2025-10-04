@@ -2,7 +2,7 @@
 //Level Editor cpp file
 
 //Utilizes a canvas and Dear ImGui, it formats a text file that can be used to generate level-data
-#include "LevelEditor.h"
+#include "../include/LevelEditor.h"
 
 
 //Grab the attribute data from the LevelLayout, to use/change while editing the level in the editor.
