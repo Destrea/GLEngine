@@ -3,22 +3,26 @@
 
 //Utilizes a canvas and Dear ImGui, it formats a text file that can be used to generate level-data
 #include "../include/LevelEditor.h"
-
+#include "../include/ImguiLayer.h"
 
 //Grab the attribute data from the LevelLayout, to use/change while editing the level in the editor.
 LevelEditor LevelEditor::s_Instance;
+static ImVector<LevelEditor::EditorVertex> vertices;
+static ImVector<LevelEditor::EditorEdge> edges;
+static LevelEditor::EditorVertex nullVert;
+#include <string>
+#include <sstream>
+#include <vector>
+#include <iostream>
+static std::vector<std::string> ListItems;
+int Create_Edge(LevelEditor::EditorEdge);
 
+//Add "draw_list" static pointer, for use with Create_Edge
 
 
 //Add funtionality of pushing the new points/vertices onto an array, and formatting them to work like vertex attribute data.
 
 
-void LevelEditor::DrawVertex()
-{
-
-
-
-}
 
 
 float round_to_grid(int n, int GRID_STEP)
@@ -30,11 +34,38 @@ float round_to_grid(int n, int GRID_STEP)
 }
 
 
+LevelEditor::EditorVertex* LevelEditor::getVertInfo(int vertID)
+{
+    for(int i = 0; i < vertices.size(); i++)
+    {
+        if(vertices[i].ID == vertID)
+        {
+            return &vertices[i];
+        }
+    }
+
+    return &nullVert;
+}
+
+
+int checkVertAtPos(ImVec2 hoveredLoc)
+{
+    for(int i = 0; i < vertices.size(); i++)
+    {
+        if(vertices[i].location == hoveredLoc)
+        {
+            return vertices[i].ID;
+        }
+    }
+
+    return -1;
+}
 
 void LevelEditor::DrawWindow()
 {
     if(ImGui::Begin("Canvas"))
     {
+
         //General Options and variables
         static ImVector<ImVec2> points;
         static ImVec2 scrolling(0.0f,0.0f);
@@ -43,23 +74,100 @@ void LevelEditor::DrawWindow()
         static bool adding_line = false;
         static bool adding_vert = false;
 
-        static ImVector<ImVec2> vertices;
-        const char* items[] = {"Vertex", "Line", "None"};
+        const char* items[] = {"Vertex", "Line", "Move", "None"};
         static int item_selected_idx = 0;
         //Options for grid-snapping
         const float GRID_STEP = 32.0f;
 
         static ImGuiColorEditFlags base_flags = ImGuiColorEditFlags_None;
+
+
+
+
+
+
+
         //Settings checkboxes
-        ImGui::Checkbox("Enable grid", &opt_enable_grid);
+        ImGui::Checkbox("Enable grid", &opt_enable_grid); ImGui::SameLine();
         ImGui::Checkbox("Enable context menu", &opt_enable_context_menu);
-        ImGui::Combo("Draw Mode", &item_selected_idx, items, IM_ARRAYSIZE(items));
+        ImGui::Combo("Draw Mode", &item_selected_idx, items, IM_ARRAYSIZE(items)); ImGui::SameLine();
+        if(ImGui::Button("Add Edge"))
+        {
+            ImGui::OpenPopup("Adding Edge");
+        }
 
-        ImGui::Text("Selected Opton: %d",item_selected_idx);
-        ImGui::Text("Color Settings:");
+        if(ImGui::BeginPopupModal("Adding Edge", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            static int item_selected_idx1 = 0;
+            static ImGuiComboFlags flags = 0;
+            const char* combo_preview_value1 = ListItems[item_selected_idx1].c_str();
+
+            if(ImGui::BeginCombo("Vertex 1", combo_preview_value1, flags))
+            {
+                int len = vertices.size();
+
+
+                for (int n = 0; n < vertices.size(); n++)
+                {
+                    const bool is_selected = (item_selected_idx1 == n);
+                    if (ImGui::Selectable(ListItems[n].c_str(), is_selected))
+                        item_selected_idx1 = n;
+                    if(is_selected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+
+                ImGui::EndCombo();
+            }
+
+            static int item_selected_idx2 = 0;
+            const char* combo_preview_value2 = ListItems[item_selected_idx2].c_str();
+
+            if(ImGui::BeginCombo("Vertex 2", combo_preview_value2, flags))
+            {
+                int len = vertices.size();
+
+                for (int n = 0; n < vertices.size(); n++)
+                {
+                    const bool is_selected = (item_selected_idx2 == n);
+                    if (ImGui::Selectable(ListItems[n].c_str(), is_selected))
+                        item_selected_idx2 = n;
+                    if(is_selected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+
+                ImGui::EndCombo();
+            }
+
+            //Add confirmation box
+            if(ImGui::Button("Add"))
+            {
+                LevelEditor::EditorVertex* v1 = getVertInfo(item_selected_idx1);
+                LevelEditor::EditorVertex* v2 = getVertInfo(item_selected_idx2);
+                LevelEditor::EditorEdge tempEdge;
+                int edgeID = edges.size() + 1;
+                std::stringstream ss;
+                ss << "EdgeID: " << edgeID;
+                std::string edgeName = ss.str();
+                tempEdge.Init(edgeID, v1, v2, edgeName);
+                edges.push_back(tempEdge);
+                ImGuiManager::Get().addLogItem("info", "Edge Created.");
+            }
+
+            if(ImGui::Button("Close"))
+                ImGui::CloseCurrentPopup();
+            ImGui::EndPopup();
+        }
+
+
+
+        //ImGui::Text("Selected Opton: %d",item_selected_idx);
+        //ImGui::Text("Color Settings:");
         static ImVec4 v_color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 200.0f / 255.0f);
-        ImGui::ColorEdit3("Vertex Color", (float*)&v_color, base_flags);
-
+        //ImGui::ColorEdit3("Vertex Color", (float*)&v_color, base_flags);
 
         ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();
         ImVec2 canvas_sz = ImGui::GetContentRegionAvail();
@@ -82,21 +190,47 @@ void LevelEditor::DrawWindow()
         const ImVec2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);
 
 
-
         //Line-drawing mouse handling
         //Add first and second point
         if (is_hovered && !adding_line && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
         {
-            if(item_selected_idx == 1)
+            if(item_selected_idx == 2)
+            {
+                ImVec2 mouseGridPos(round_to_grid(mouse_pos_in_canvas.x, GRID_STEP), round_to_grid(mouse_pos_in_canvas.y, GRID_STEP));
+                int status = checkVertAtPos(mouseGridPos);
+                if(status == -1)
+                {
+                    ImGuiManager::Get().addLogItem("error", "No vertex found at this location.");
+                }
+                else
+                {
+                    selectedObj = status;
+                    std::stringstream ss;
+                    ss << "Vertex with ID: " << status << " found at this location.";
+                    std::string message = ss.str();
+                    ImGuiManager::Get().addLogItem("info", message);
+                }
+            }
+            else if(item_selected_idx == 1)
             {
                 points.push_back(mouse_pos_in_canvas);
                 points.push_back(mouse_pos_in_canvas);
                 adding_line = true;
             }
+            //Drawing a vertex
             else if(item_selected_idx == 0)
             {
+
                 ImVec2 location(round_to_grid(mouse_pos_in_canvas.x, GRID_STEP), round_to_grid(mouse_pos_in_canvas.y, GRID_STEP));
-                vertices.push_back(location);
+                EditorVertex tempVert;
+                int vertID = vertices.size() + 1;
+                std::stringstream ss;
+                ss << "VertID: " << vertID;
+                std::string vertName = ss.str();
+
+                tempVert.Init(vertID, location, vertName);
+                vertices.push_back(tempVert);
+                ListItems.push_back(tempVert.name);
                 adding_vert = true;
             }
         }
@@ -145,7 +279,6 @@ void LevelEditor::DrawWindow()
         draw_list->PushClipRect(canvas_p0, canvas_p1, true);
         if(opt_enable_grid)
         {
-
             for (float x = fmodf(scrolling.x, GRID_STEP); x < canvas_sz.x; x += GRID_STEP)
                 draw_list->AddLine(ImVec2(canvas_p0.x + x, canvas_p0.y), ImVec2(canvas_p0.x + x, canvas_p1.y), IM_COL32(200, 200, 200, 40));
             for (float y = fmodf(scrolling.y, GRID_STEP); y < canvas_sz.y; y += GRID_STEP)
@@ -155,9 +288,9 @@ void LevelEditor::DrawWindow()
         {
             draw_list->AddLine(ImVec2(origin.x + points[n].x, origin.y + points[n].y), ImVec2(origin.x + points[n+1].x, origin.y + points[n+1].y), IM_COL32(255,255,0,255), 2.0f);
         }
-        for(int v = 0; v < vertices.Size; v++)
+        for(int v = 0; v < vertices.size(); v++)
         {
-            draw_list->AddCircleFilled(ImVec2(origin.x + vertices[v].x, origin.y + vertices[v].y), 12.0f, IM_COL32((float)v_color.x * 255.0f, (float)v_color.y * 255.0f, (float)v_color.z * 255.0f, 255), 16);
+            draw_list->AddCircleFilled(ImVec2(origin.x + vertices[v].location.x, origin.y + vertices[v].location.y), 12.0f, IM_COL32((float)v_color.x * 255.0f, (float)v_color.y * 255.0f, (float)v_color.z * 255.0f, 255), 16);
         }
 
 
@@ -166,9 +299,14 @@ void LevelEditor::DrawWindow()
     }
     ImGui::End();
 
+
 }
 
 
+void Create_Edge(LevelEditor::EditorEdge* edgeVar)
+{
+    draw_list->Add
+}
 
 
 

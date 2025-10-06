@@ -20,6 +20,14 @@ Level Editor:
         Additionally, for now, all Z values will be initialized so that the walls are properly square, with "1.0" distance between the floor and ceiling.
             This willl eventually change, as the level editor becomes more fleshed out.
 
+    list option:
+        "Draw", "Connect" and "Erase"
+
+
+    Moving:
+        Check if vertex exists near the point hovered (Snapped to nearest grid mark)
+        If it does, allow it to move.
+
 
 
 

@@ -2,7 +2,7 @@
 //ImGui layer for GLEngine
 
 
-//#include "ImguiLayer.h"
+#include "../include/ImguiLayer.h"
 //#include "FramebufferHandler.h"
 //#include "../include/Common.h"
 //#include <GLFW/glfw3.h>
@@ -13,6 +13,7 @@ using namespace ImGui;
 //FramebuffManager& i_FramebuffMgr = FramebuffManager::Get();
 //ImGuiManager& i_ImguiMgr = ImGuiManager::Get();
 ImGuiManager ImGuiManager::s_Instance;
+static ImGuiManager::AppLog logMessages;
 
 void ImGuiManager::ImGuiRender(GLFWwindow* window)
 {
@@ -21,6 +22,10 @@ void ImGuiManager::ImGuiRender(GLFWwindow* window)
     ImGui::NewFrame();
     ShowDockSpaceAndMenu();
     ShowLogWindow();
+
+
+
+    //Refine this section to make them all Unique, so that it doesn't cause issues with the list in ImGui
 
 
     if(ImGui::Begin("Editor"))
@@ -73,18 +78,38 @@ void ImGuiManager::ImGuiRender(GLFWwindow* window)
     ImGui::End();
 
 
-    if(ImGui::Begin("New Window 2"))
+    if(ImGui::Begin("Inspect"))
     {
-        ImGui::Text("This is ANOTHER new Window :)");
+        int inspectedObject = LevelEditor::Get().selectedObj;
+        LevelEditor::EditorVertex* selectedVert;
+
+        if(inspectedObject != 0)
+        {
+            selectedVert = LevelEditor::Get().getVertInfo(inspectedObject);
+
+        }
+
+        ImGui::Text("Object ID: %d", inspectedObject);
+        ImGui::Text("Position");
+        ImGui::InputFloat("X", &selectedVert->location.x); ImGui::SameLine();
+        ImGui::InputFloat("Y", &selectedVert->location.y); //ImGui::SameLine();
+        //ImGui::SliderFloat("Z", &f2, 0.0f, 5.0f);
+
+
+
+
 
     }
     ImGui::End();
 
-    if(ImGui::Begin("OpenGL Texture Text"))
+    if(ImGui::Begin("Vertex Properties"))
     {
         ImGui::Text("pointer = %x", FramebuffManager::Get().f_tex);
         ImGui::Text("size = %d x %d", FramebuffManager::Get().tex_w, FramebuffManager::Get().tex_h);
         //ImGui::Image((ImTextureID)(intptr_t)f_tex, ImVec2(tex_w, tex_h));
+
+
+
 
     }
     ImGui::End();
@@ -122,123 +147,19 @@ void ImGuiManager::ShowDockSpaceAndMenu()
 }
 
 
-struct AppLog
+
+
+void ImGuiManager::addLogItem(std::string logtype, std::string message)
 {
-    ImGuiTextBuffer     Buff;
-    ImGuiTextFilter     Filter;
-    ImVector<int>       LineOffsets;
-    bool                AutoScroll;
-
-    AppLog()
-    {
-        AutoScroll = true;
-        Clear();
-    }
-
-    void Clear()
-    {
-        Buff.clear();
-        LineOffsets.clear();
-        LineOffsets.push_back(0);
-    }
-
-    void AddLog(const char* fmt, ...) IM_FMTARGS(2)
-    {
-        int old_size = Buff.size();
-        va_list args;
-        va_start(args, fmt);
-        Buff.appendfv(fmt,args);
-        va_end(args);
-        for(int new_size = Buff.size(); old_size < new_size; old_size++)
-        {
-            if(Buff[old_size] == '\n')
-            {
-                LineOffsets.push_back(old_size+1);
-            }
-        }
-    }
-
-    void Draw(const char* title, bool* p_open = NULL)
-    {
-        if(!ImGui::Begin(title, p_open)){
-            ImGui::End();
-            return;
-        }
-
-        //Menu
-        if(ImGui::BeginPopup("Options"))
-        {
-            ImGui::Checkbox("Auto-Scroll", &AutoScroll);
-            ImGui::EndPopup();
-        }
-
-        //Main window
-        if(ImGui::Button("Options"))
-            ImGui::OpenPopup("Options");
-        ImGui::SameLine();
-        bool clear = ImGui::Button("Clear");
-        ImGui::SameLine();
-        bool copy = ImGui::Button("Copy");
-        ImGui::SameLine();
-        Filter.Draw("Filter", -100.0f);
-
-        ImGui::Separator();
-
-        if (ImGui::BeginChild("scrolling", ImVec2(0, 0), ImGuiChildFlags_None, ImGuiWindowFlags_HorizontalScrollbar))
-        {
-            if (clear)
-                Clear();
-            if (copy)
-                ImGui::LogToClipboard();
-
-            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-            const char* buf = Buff.begin();
-            const char* buf_end = Buff.end();
-            if (Filter.IsActive())
-            {
-                // In this example we don't use the clipper when Filter is enabled.
-                // This is because we don't have random access to the result of our filter.
-                // A real application processing logs with ten of thousands of entries may want to store the result of
-                // search/filter.. especially if the filtering function is not trivial (e.g. reg-exp).
-                for (int line_no = 0; line_no < LineOffsets.Size; line_no++)
-                {
-                    const char* line_start = buf + LineOffsets[line_no];
-                    const char* line_end = (line_no + 1 < LineOffsets.Size) ? (buf + LineOffsets[line_no + 1] - 1) : buf_end;
-                    if (Filter.PassFilter(line_start, line_end))
-                        ImGui::TextUnformatted(line_start, line_end);
-                }
-            }
-            else
-            {
-                ImGuiListClipper clipper;
-                clipper.Begin(LineOffsets.Size);
-                while (clipper.Step())
-                {
-                    for (int line_no = clipper.DisplayStart; line_no < clipper.DisplayEnd; line_no++)
-                    {
-                        const char* line_start = buf + LineOffsets[line_no];
-                        const char* line_end = (line_no + 1 < LineOffsets.Size) ? (buf + LineOffsets[line_no + 1] - 1) : buf_end;
-                        ImGui::TextUnformatted(line_start, line_end);
-                    }
-                }
-                clipper.End();
-            }
-            ImGui::PopStyleVar();
-            if(AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
-                ImGui::SetScrollHereY(1.0f);
-        }
-        ImGui::EndChild();
-        ImGui::End();
-
-
-    }
-};
+    const char* charMsg = message.data();
+    const char* charLogtype = logtype.data();
+    logMessages.AddLog("[%05d] [%s] %s \n", ImGui::GetFrameCount(), charLogtype, charMsg);
+}
 
 
 
 void ImGuiManager::ShowLogWindow()
 {
-    static AppLog log;
 
     ImGui::SetNextWindowSize(ImVec2(500,400), ImGuiCond_FirstUseEver);
     ImGui::Begin("Log");
@@ -251,13 +172,13 @@ void ImGuiManager::ShowLogWindow()
         {
             const char* category = categories[counter % IM_ARRAYSIZE(categories)];
             const char* word = words[counter % IM_ARRAYSIZE(words)];
-            log.AddLog("[%05d] [%s] Hello, current time is %.1f, here's a word: '%s'\n",
+            logMessages.AddLog("[%05d] [%s] Hello, current time is %.1f, here's a word: '%s'\n",
                        ImGui::GetFrameCount(), category, ImGui::GetTime(), word);
             counter++;
         }
     }
     ImGui::End();
 
-    log.Draw("Log");
+    logMessages.Draw("Log");
 }
 
