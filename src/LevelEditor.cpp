@@ -14,14 +14,121 @@ static LevelEditor::EditorVertex nullVert;
 #include <sstream>
 #include <vector>
 #include <iostream>
+#include <cstdio>
 static std::vector<std::string> ListItems;
 int Create_Edge(LevelEditor::EditorEdge);
 
+static bool opt_enable_context_menu = true;
+static bool opt_enable_grid = true;
+static int item_selected_idx = 0;
 //Add "draw_list" static pointer, for use with Create_Edge
 
-
+static ImVec2 canvasOrigin;
+ImDrawList* canvasDrawList;
 //Add funtionality of pushing the new points/vertices onto an array, and formatting them to work like vertex attribute data.
 
+
+//Add function to "save" the data stored in both vectors, so that the data can be re-imported to edit again later, without having to parse the txt file
+
+int LevelEditor::Level_Export(char *fileName)
+{
+    //Export vertices here
+    //Account for x and y vertices (height)
+    const char filePath[128] = "../resources/levels/";
+    char path[128];
+    strcat(fileName,".txt");
+    strcat(path, filePath);
+    strcat(path, fileName);
+    FILE *f = fopen(path, "w");
+    //printf("\n%s\n", path);
+    if(!f)
+    {
+        //std::cout << "ERROR::level File not loaded!" << std::endl;
+        return -1;
+    }
+
+    //Level file header text
+    fputs("[WALL]\n", f);
+    fputs("0 0 0 3 2 6\n",f);
+
+
+    //Calculate offsets for the canvas size, instead of taking it literally
+    float offset = 32.0f;
+    //Each edge handled separately
+    for(int n = 0; n < edges.size(); n++)
+    {
+        //Each "segment" needs four verticies, making two triangles
+        //Therefore, 6 passes.
+
+
+        //Rework the x y and z coordinates, so that they correctly get changed, to create the two triangles of a quad.
+        for(int i = 0; i < 6; i++)
+        {
+            float x = float(edges[n].vert1->location.x) / offset;    //x location on grid is true x location
+
+            float y = 0.0f; //fallback "default" value in case of errors.
+            if(i < 3)
+            {
+                y = 0.0f;    //y location on grid actually dictates the height. So for three of them itll be 1.0, and for the other three itll be 0.0
+            }
+            else
+            {
+                y = 1.0f;
+            }
+
+            float z = float(edges[n].vert1->location.y) / offset; //z location is actually the "y" location on the grid
+
+            //The texture coordinates will change depending on which iteration we're on. Need to brainstorm ideas for this one.
+
+            float tex1 = 0.0f;
+            float tex2 = 1.0f;
+            if(i > 0 && i < 4)
+            {
+                tex1 = 1.0;
+            }
+            else { tex1 = 0.0;}
+            if(i > 1 && i < 5)
+            {
+                tex2 = 1.0;
+            }
+            else { tex2 = 0.0;}
+
+            fprintf(f, "%f %f %f %f %f\n", x, z, y, tex1, tex2);
+        }
+        fputs("\n", f); //prints a newline after each set of 6, for readability.
+
+    }
+    //save it to a .txt file, formatted correctly for the "levelLayout" file to read properly
+    fclose(f);
+
+    //Remember that each edge needs to be split into four vertices.
+    //These four will then compose a wall segment that is made of two triangles. Therefore, each one is "six" edges, and four vertices
+
+
+    return 0;   //Successful return
+
+}
+
+int LevelEditor::Level_Import(char *fileName)
+{
+    //Do exactly the opposite of Level_export, and re-do the calculations, and add the locations
+    //into edges and vertices, so that I can re-import level files into the editor to change or modify at will.
+
+    const char filePath[128] = "../resources/levels/";
+    char path[128];
+    strcat(fileName,".txt");
+    strcat(path, filePath);
+    strcat(path, fileName);
+    FILE *f = fopen(path, "w");
+
+
+
+
+    //Read the x and z values, multiply them by the grid offset
+    //then create a struct vertex object and apply them to the vertex
+    //Lastly, create an edge, and apply the vertices to the edge
+
+}
 
 
 
@@ -69,99 +176,16 @@ void LevelEditor::DrawWindow()
         //General Options and variables
         static ImVector<ImVec2> points;
         static ImVec2 scrolling(0.0f,0.0f);
-        static bool opt_enable_grid = true;
-        static bool opt_enable_context_menu = true;
+
+
         static bool adding_line = false;
         static bool adding_vert = false;
 
-        const char* items[] = {"Vertex", "Line", "Move", "None"};
-        static int item_selected_idx = 0;
+
         //Options for grid-snapping
         const float GRID_STEP = 32.0f;
 
         static ImGuiColorEditFlags base_flags = ImGuiColorEditFlags_None;
-
-
-
-
-
-
-
-        //Settings checkboxes
-        ImGui::Checkbox("Enable grid", &opt_enable_grid); ImGui::SameLine();
-        ImGui::Checkbox("Enable context menu", &opt_enable_context_menu);
-        ImGui::Combo("Draw Mode", &item_selected_idx, items, IM_ARRAYSIZE(items)); ImGui::SameLine();
-        if(ImGui::Button("Add Edge"))
-        {
-            ImGui::OpenPopup("Adding Edge");
-        }
-
-        if(ImGui::BeginPopupModal("Adding Edge", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-        {
-            static int item_selected_idx1 = 0;
-            static ImGuiComboFlags flags = 0;
-            const char* combo_preview_value1 = ListItems[item_selected_idx1].c_str();
-
-            if(ImGui::BeginCombo("Vertex 1", combo_preview_value1, flags))
-            {
-                int len = vertices.size();
-
-
-                for (int n = 0; n < vertices.size(); n++)
-                {
-                    const bool is_selected = (item_selected_idx1 == n);
-                    if (ImGui::Selectable(ListItems[n].c_str(), is_selected))
-                        item_selected_idx1 = n;
-                    if(is_selected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
-                }
-
-                ImGui::EndCombo();
-            }
-
-            static int item_selected_idx2 = 0;
-            const char* combo_preview_value2 = ListItems[item_selected_idx2].c_str();
-
-            if(ImGui::BeginCombo("Vertex 2", combo_preview_value2, flags))
-            {
-                int len = vertices.size();
-
-                for (int n = 0; n < vertices.size(); n++)
-                {
-                    const bool is_selected = (item_selected_idx2 == n);
-                    if (ImGui::Selectable(ListItems[n].c_str(), is_selected))
-                        item_selected_idx2 = n;
-                    if(is_selected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
-                }
-
-                ImGui::EndCombo();
-            }
-
-            //Add confirmation box
-            if(ImGui::Button("Add"))
-            {
-                LevelEditor::EditorVertex* v1 = getVertInfo(item_selected_idx1);
-                LevelEditor::EditorVertex* v2 = getVertInfo(item_selected_idx2);
-                LevelEditor::EditorEdge tempEdge;
-                int edgeID = edges.size() + 1;
-                std::stringstream ss;
-                ss << "EdgeID: " << edgeID;
-                std::string edgeName = ss.str();
-                tempEdge.Init(edgeID, v1, v2, edgeName);
-                edges.push_back(tempEdge);
-                ImGuiManager::Get().addLogItem("info", "Edge Created.");
-            }
-
-            if(ImGui::Button("Close"))
-                ImGui::CloseCurrentPopup();
-            ImGui::EndPopup();
-        }
-
 
 
         //ImGui::Text("Selected Opton: %d",item_selected_idx);
@@ -179,6 +203,7 @@ void LevelEditor::DrawWindow()
         //Draw Canvas Border and Background
         ImGuiIO& io = ImGui::GetIO();
         ImDrawList* draw_list = ImGui::GetWindowDrawList();
+        canvasDrawList = draw_list;
         draw_list->AddRectFilled(canvas_p0, canvas_p1, IM_COL32(50,50,50,255));
         draw_list->AddRect(canvas_p0, canvas_p1, IM_COL32(255,255,255,255));
 
@@ -186,7 +211,9 @@ void LevelEditor::DrawWindow()
         ImGui::InvisibleButton("canvas", canvas_sz, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
         const bool is_hovered = ImGui::IsItemHovered();
         const bool is_active = ImGui::IsItemActive();
-        const ImVec2 origin(canvas_p0.x + scrolling.x, canvas_p0.y + scrolling.y);  //Lock scrolled origin
+        const ImVec2 origin(canvas_p0.x + scrolling.x, canvas_p0.y + scrolling.y);  //
+        canvasOrigin = origin;
+        //Lock scrolled origin
         const ImVec2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);
 
 
@@ -288,6 +315,12 @@ void LevelEditor::DrawWindow()
         {
             draw_list->AddLine(ImVec2(origin.x + points[n].x, origin.y + points[n].y), ImVec2(origin.x + points[n+1].x, origin.y + points[n+1].y), IM_COL32(255,255,0,255), 2.0f);
         }
+        for(int n = 0; n < edges.size(); n++)
+        {
+            draw_list->AddLine(ImVec2(origin.x +  edges[n].vert1->location.x, origin.y + edges[n].vert1->location.y), ImVec2(origin.x + edges[n].vert2->location.x, origin.y + edges[n].vert2->location.y), IM_COL32(255,255,0,255), 2.0f);
+            //printf("v1.x = %f\n", v1->location.x);
+
+        }
         for(int v = 0; v < vertices.size(); v++)
         {
             draw_list->AddCircleFilled(ImVec2(origin.x + vertices[v].location.x, origin.y + vertices[v].location.y), 12.0f, IM_COL32((float)v_color.x * 255.0f, (float)v_color.y * 255.0f, (float)v_color.z * 255.0f, 255), 16);
@@ -299,13 +332,114 @@ void LevelEditor::DrawWindow()
     }
     ImGui::End();
 
+    if(ImGui::Begin("Level Edit Settings"))
+    {
+        const char* items[] = {"Vertex", "Line", "Move", "None"};
+        //static int item_selected_idx = 0;
+        //Settings checkboxes
+        ImGui::Checkbox("Enable grid", &opt_enable_grid); ImGui::SameLine();
+        ImGui::Checkbox("Enable context menu", &opt_enable_context_menu);
+        ImGui::Combo("Draw Mode", &item_selected_idx, items, IM_ARRAYSIZE(items));
+        if(ImGui::Button("Add Edge"))
+        {
+            ImGui::OpenPopup("Adding Edge");
+        }
+
+        if(ImGui::BeginPopupModal("Adding Edge", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            static int item_selected_idx1 = 0;
+            static ImGuiComboFlags flags = 0;
+            const char* combo_preview_value1 = ListItems[item_selected_idx1].c_str();
+
+            if(ImGui::BeginCombo("Vertex 1", combo_preview_value1, flags))
+            {
+
+                for (int n = 0; n < vertices.size(); n++)
+                {
+                    const bool is_selected = (item_selected_idx1 == n);
+                    if (ImGui::Selectable(ListItems[n].c_str(), is_selected))
+                        item_selected_idx1 = n;
+                    if(is_selected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+
+                ImGui::EndCombo();
+            }
+
+            static int item_selected_idx2 = 0;
+            const char* combo_preview_value2 = ListItems[item_selected_idx2].c_str();
+
+            if(ImGui::BeginCombo("Vertex 2", combo_preview_value2, flags))
+            {
+
+                for (int n = 0; n < vertices.size(); n++)
+                {
+                    const bool is_selected = (item_selected_idx2 == n);
+                    if (ImGui::Selectable(ListItems[n].c_str(), is_selected))
+                        item_selected_idx2 = n;
+                    if(is_selected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+
+                ImGui::EndCombo();
+            }
+
+            //Adds an edge to the "edges" list, so that it can be drawn.
+            //Additionally, adding it to a list will allow it to be exported, so that it can be "drawn" as actual polygons by OpenGL, in the main editor window.
+            if(ImGui::Button("Add"))
+            {
+                LevelEditor::EditorVertex* v1 = getVertInfo(item_selected_idx1 + 1);
+                LevelEditor::EditorVertex* v2 = getVertInfo(item_selected_idx2 + 1);
+                LevelEditor::EditorEdge tempEdge;
+                int edgeID = edges.size() + 1;
+                std::stringstream ss;
+                ss << "EdgeID: " << edgeID;
+                std::string edgeName = ss.str();
+                tempEdge.Init(edgeID, v1, v2, edgeName);
+                edges.push_back(tempEdge);
+                ImGuiManager::Get().addLogItem("info", "Edge Created.");
+            }
+
+            if(ImGui::Button("Close"))
+                ImGui::CloseCurrentPopup();
+            ImGui::EndPopup();
+        }
+
+        if(ImGui::Button("Export"))
+        {
+            ImGui::OpenPopup("Level Export");
+        }
+
+        if(ImGui::BeginPopupModal("Level Export", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            //ImGui::SetItemDefaultFocus();
+            ImGui::Text("Select a Path for Export:");
+            static char fileName[128] = "";
+            //File browser selector
+            ImGui::InputTextWithHint("FileName","File Name",fileName, IM_ARRAYSIZE(fileName));
+            if(ImGui::Button("Export"))
+            {
+
+                Level_Export(fileName);
+                //exportPopup = false;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+
+    }
+    ImGui::End();
 
 }
 
 
 void Create_Edge(LevelEditor::EditorEdge* edgeVar)
 {
-    draw_list->Add
+    //draw_list->Add
 }
 
 

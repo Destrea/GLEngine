@@ -122,25 +122,30 @@ void ImGuiManager::ImGuiRender(GLFWwindow* window)
 
 void ImGuiManager::ShowDockSpaceAndMenu()
 {
+    bool exportPopup = false;
 
     if(ImGui::BeginMainMenuBar())
     {
         if(ImGui::BeginMenu("File"))
         {
-            ImGui::EndMenu();
-        }
-        if(ImGui::BeginMenu("File"))
-        {
-            if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-            if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {} // Disabled item
-            ImGui::Separator();
-            if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-            if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-            if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+            if(ImGui::BeginMenu("LevelEditor"))
+            {
+                if(ImGui::MenuItem("Export")){}
+
+
+                //ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+                //ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+
+
+                ImGui::EndMenu();
+            }
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
     }
+
+
 
     ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
 

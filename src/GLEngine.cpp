@@ -11,8 +11,6 @@
 #include <iostream>
 //#include "../include/Model.h"
 #include "../include/ImguiLayer.h"
-#include "../include/InputManager.h"
-#include "stb_image.h"
 
 //Move some input callbacks into the InputManager.cpp file and call them with the pointer/singleton reference
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -92,7 +90,7 @@ int main(int argc, char *argv[])
 
     //Loads the level with Level Loader
     level one;
-    one.load_level("resources/levels/Level1.txt");
+    one.load_level("resources/levels/Test.txt");
 
     //Applies the shader to the loaded level mesh
     one.SetVars(ourShader);

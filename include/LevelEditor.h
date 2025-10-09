@@ -15,7 +15,8 @@ public:
     }
 
     void DrawWindow();
-
+    int Level_Export(char *fileName);
+    int Level_Import(char *fileName);
 
 
     struct EditorVertex

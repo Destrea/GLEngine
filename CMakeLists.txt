@@ -22,7 +22,7 @@ target_compile_features(GLEngine PUBLIC cxx_std_11)
 
 #Source code is here
 add_subdirectory(src)
-add_subdirectory(include)
+#add_subdirectory(include)
 add_subdirectory(extern/glfw-3.4)
 add_subdirectory(extern/glm-1.0.1)
 target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
