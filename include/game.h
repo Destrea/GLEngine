@@ -20,6 +20,7 @@ public:
     GameState       State;
     bool            Keys[1024];
     unsigned int    Width, Height;
+
     // Constructor/Destructor
     Game(unsigned int width, unsigned int height);
     ~Game();
@@ -33,14 +34,15 @@ public:
 
     void calcDeltaTime();
     float get_deltaTime();
-
+    void set_debug(bool var);
+    bool get_debug();
 
 private:
 
     //DeltaTime variables
     float deltaTime;
     float lastFrame;
-
+    bool  debug_mode;
 };
 
 #endif

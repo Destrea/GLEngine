@@ -34,16 +34,18 @@ int LevelEditor::Level_Export(char *fileName)
 {
     //Export vertices here
     //Account for x and y vertices (height)
-    const char filePath[128] = "../resources/levels/";
-    char path[128];
-    strcat(fileName,".txt");
+    const char filePath[21] = "../resources/levels/";
+    printf("\n%s\n", filePath);
+    char path[64];
     strcat(path, filePath);
     strcat(path, fileName);
+    strcat(path,".txt");
+    printf("\n%s\n", path);
     FILE *f = fopen(path, "w");
-    //printf("\n%s\n", path);
+    printf("\n%s\n", path);
     if(!f)
     {
-        //std::cout << "ERROR::level File not loaded!" << std::endl;
+        std::cout << "ERROR::level File location not loaded!" << std::endl;
         return -1;
     }
 
@@ -62,39 +64,25 @@ int LevelEditor::Level_Export(char *fileName)
 
 
         //Rework the x y and z coordinates, so that they correctly get changed, to create the two triangles of a quad.
-        for(int i = 0; i < 6; i++)
-        {
-            float x = float(edges[n].vert1->location.x) / offset;    //x location on grid is true x location
 
-            float y = 0.0f; //fallback "default" value in case of errors.
-            if(i < 3)
-            {
-                y = 0.0f;    //y location on grid actually dictates the height. So for three of them itll be 1.0, and for the other three itll be 0.0
-            }
-            else
-            {
-                y = 1.0f;
-            }
+//FIX: This only takes into acccount ONE of the two vertices that get placed in the level editor, instead of both
 
-            float z = float(edges[n].vert1->location.y) / offset; //z location is actually the "y" location on the grid
 
-            //The texture coordinates will change depending on which iteration we're on. Need to brainstorm ideas for this one.
+        ImVec2 v1 = ImVec2(edges[n].vert1->location.x / offset,edges[n].vert1->location.y / offset);
+        ImVec2 v2 = ImVec2(edges[n].vert2->location.x / offset,edges[n].vert2->location.y / offset);
+        //a
+        fprintf(f, "%f %f %f %f %f\n", v1.x, 0.0, v1.y, 0.0, 0.0);
+        //b
+        fprintf(f, "%f %f %f %f %f\n", v2.x, 0.0, v2.y, 1.0, 0.0);
+        //c
+        fprintf(f, "%f %f %f %f %f\n", v2.x, 1.0, v2.y, 1.0, 1.0);
+        //c
+        fprintf(f, "%f %f %f %f %f\n", v2.x, 1.0, v2.y, 1.0, 1.0);
+        //d
+        fprintf(f, "%f %f %f %f %f\n", v1.x, 1.0, v1.y, 0.0, 1.0);
+        //a
+        fprintf(f, "%f %f %f %f %f\n", v1.x, 0.0, v1.y, 0.0, 0.0);
 
-            float tex1 = 0.0f;
-            float tex2 = 1.0f;
-            if(i > 0 && i < 4)
-            {
-                tex1 = 1.0;
-            }
-            else { tex1 = 0.0;}
-            if(i > 1 && i < 5)
-            {
-                tex2 = 1.0;
-            }
-            else { tex2 = 0.0;}
-
-            fprintf(f, "%f %f %f %f %f\n", x, z, y, tex1, tex2);
-        }
         fputs("\n", f); //prints a newline after each set of 6, for readability.
 
     }
@@ -114,12 +102,7 @@ int LevelEditor::Level_Import(char *fileName)
     //Do exactly the opposite of Level_export, and re-do the calculations, and add the locations
     //into edges and vertices, so that I can re-import level files into the editor to change or modify at will.
 
-    const char filePath[128] = "../resources/levels/";
-    char path[128];
-    strcat(fileName,".txt");
-    strcat(path, filePath);
-    strcat(path, fileName);
-    FILE *f = fopen(path, "w");
+
 
 
 
@@ -127,7 +110,7 @@ int LevelEditor::Level_Import(char *fileName)
     //Read the x and z values, multiply them by the grid offset
     //then create a struct vertex object and apply them to the vertex
     //Lastly, create an edge, and apply the vertices to the edge
-
+    return 0;
 }
 
 

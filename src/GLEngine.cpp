@@ -25,7 +25,7 @@ GLFWwindow* window;
 const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
 
-bool debug_mode;
+static bool debug_mode;
 
 
 Camera p_Camera(glm::vec3(0.0f,0.0f,3.0f));
@@ -34,19 +34,23 @@ float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
 
-Game Default(SCR_WIDTH, SCR_HEIGHT);
+Game Game(SCR_WIDTH, SCR_HEIGHT);
 
 int main(int argc, char *argv[])
 {
-    if(argc < 2 || argv[1] == "-d")
+    if(argc < 2 || strcmp(argv[1],  "-e") == 0)
     {
-        debug_mode = true;
+        printf("a");
+        Game.set_debug(true);
     }
-    else if(argv[1] == "-g")
+    else if(strcmp(argv[1],"-g") == 0)
     {
-        debug_mode = false;
+        printf("b");
+         Game.set_debug(false);
     }
-
+    printf("\n%s\n", argv[1]);
+    printf("%b\n", debug_mode);
+    printf("%d\n", argc);
 
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -57,7 +61,7 @@ int main(int argc, char *argv[])
 #endif
     glfwWindowHint(GLFW_RESIZABLE, false);
 
-    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Default", nullptr, nullptr);
+    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Game", nullptr, nullptr);
     if(window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -136,14 +140,14 @@ int main(int argc, char *argv[])
     FramebuffManager::Get().init_framebuffer();
 
     //Initialize game
-    Default.Init(window);
+    Game.Init(window);
 
     while(!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
 
         //DeltaTime calculations, handled by Game.cpp
-        Default.calcDeltaTime();
+        Game.calcDeltaTime();
 
 
         //Renders the ImGui menus, handled within the ImGui layer
@@ -152,7 +156,7 @@ int main(int argc, char *argv[])
         ImGui::Render();
 
         //Manage and process user input.
-        Default.ProcessInput(window, &p_Camera);
+        Game.ProcessInput(window, &p_Camera);
 
 
         //Processes framebuffer for editor viewport
@@ -218,9 +222,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if(key >= 0 && key < 1024)
     {
         if (action == GLFW_PRESS)
-            Default.Keys[key] = true;
+            Game.Keys[key] = true;
         else if (action == GLFW_RELEASE)
-            Default.Keys[key] = false;
+            Game.Keys[key] = false;
     }
 }
 
@@ -283,9 +287,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     if(InputManager::Get().get_cursor() == true)
         p_Camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
-
-
-
 
 GLFWwindow *get_Window()
 {

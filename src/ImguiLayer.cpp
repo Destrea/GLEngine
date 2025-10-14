@@ -8,6 +8,7 @@
 //#include <GLFW/glfw3.h>
 #include "../include/InputManager.h"
 #include "../include/LevelEditor.h"
+#include "../include/game.h"
 using namespace ImGui;
 
 //FramebuffManager& i_FramebuffMgr = FramebuffManager::Get();

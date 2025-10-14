@@ -46,3 +46,12 @@ float Game::get_deltaTime()
 {
     return deltaTime;
 }
+
+void Game::set_debug(bool var)
+{
+    debug_mode = var;
+}
+bool  Game::get_debug()
+{
+    return debug_mode;
+}
