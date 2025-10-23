@@ -11,6 +11,7 @@
 #include <iostream>
 //#include "../include/Model.h"
 #include "../include/ImguiLayer.h"
+#include "../include/ObjectManager.h"
 
 //Move some input callbacks into the InputManager.cpp file and call them with the pointer/singleton reference
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -134,6 +135,13 @@ int main(int argc, char *argv[])
 
     //Loads the framebuffer shader. Mostly just places it in a certain spot, using the vertex shader, and applying the "framebuffer's" content
     Shader fb_shader = ResourceManager::LoadShader("resources/Shaders/fb_shader.vs", "resources/Shaders/fb_shader.fs", nullptr, "framebuff");
+
+    //Test for Object hashing and stuff
+    std::string testName = "123456789";
+    Entity testEnt;
+    Object test(testName, testEnt);
+    printf("%s, %#x\n", test.name.c_str(), test.ID);
+
 
 
     //Framebuffer generation, for creating the "game" viewport via ImGui
