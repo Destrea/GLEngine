@@ -228,7 +228,7 @@ int level::load_level(const char *path)
 
 
 
-    std::cout << "\nMade it to the end of LoadLevel" << std::endl;
+    //std::cout << "\nMade it to the end of LoadLevel" << std::endl;
     return 0;
 }
 

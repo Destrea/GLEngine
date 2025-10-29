@@ -16,6 +16,10 @@ using namespace ImGui;
 ImGuiManager ImGuiManager::s_Instance;
 static ImGuiManager::AppLog logMessages;
 
+
+
+
+
 void ImGuiManager::ImGuiRender(GLFWwindow* window)
 {
     ImGui_ImplOpenGL3_NewFrame();

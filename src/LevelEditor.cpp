@@ -35,14 +35,11 @@ int LevelEditor::Level_Export(char *fileName)
     //Export vertices here
     //Account for x and y vertices (height)
     const char filePath[21] = "../resources/levels/";
-    printf("\n%s\n", filePath);
     char path[64];
     strcat(path, filePath);
     strcat(path, fileName);
     strcat(path,".txt");
-    printf("\n%s\n", path);
     FILE *f = fopen(path, "w");
-    printf("\n%s\n", path);
     if(!f)
     {
         std::cout << "ERROR::level File location not loaded!" << std::endl;

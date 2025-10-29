@@ -17,9 +17,11 @@ uint32_t crc32(std::string input, uint32_t polynomial = 0xEDB88320)
     const char *data = input.c_str();
     size_t len = input.length();
     uint32_t crc = -1;
+
+    //Iterate to each char
     for(size_t ii = 0; ii < len; ++ii)
     {
-        //
+        //bitwise XOR operation, using the current char
         crc ^= uint32_t(data[ii]);
         for(size_t jj = 0; jj < 8; ++jj)
         {
@@ -41,7 +43,6 @@ uint32_t crc32(std::string input, uint32_t polynomial = 0xEDB88320)
 struct Component
 {
     int ID;
-
 };
 
 //Base Entity class

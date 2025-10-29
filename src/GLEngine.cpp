@@ -41,17 +41,17 @@ int main(int argc, char *argv[])
 {
     if(argc < 2 || strcmp(argv[1],  "-e") == 0)
     {
-        printf("a");
+       // printf("a");
         Game.set_debug(true);
     }
     else if(strcmp(argv[1],"-g") == 0)
     {
-        printf("b");
+        //printf("b");
          Game.set_debug(false);
     }
-    printf("\n%s\n", argv[1]);
-    printf("%b\n", debug_mode);
-    printf("%d\n", argc);
+  //  printf("\n%s\n", argv[1]);
+   // printf("%b\n", debug_mode);
+   // printf("%d\n", argc);
 
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -136,11 +136,13 @@ int main(int argc, char *argv[])
     //Loads the framebuffer shader. Mostly just places it in a certain spot, using the vertex shader, and applying the "framebuffer's" content
     Shader fb_shader = ResourceManager::LoadShader("resources/Shaders/fb_shader.vs", "resources/Shaders/fb_shader.fs", nullptr, "framebuff");
 
+
+//##
     //Test for Object hashing and stuff
     std::string testName = "123456789";
     Entity testEnt;
     Object test(testName, testEnt);
-    printf("%s, %#x\n", test.name.c_str(), test.ID);
+    printf("%s, %#x\n\n", test.name.c_str(), test.ID);
 
 
 
