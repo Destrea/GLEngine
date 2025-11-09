@@ -1,0 +1,32 @@
+#pragma once
+
+//Renderer.h
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+
+namespace Renderer {
+
+    struct Texture
+    {
+        GLuint Handle = 0;
+        uint32_t Width = 0;
+        uint32_t Height = 0;
+    };
+
+
+    struct Framebuffer
+    {
+        GLuint Handle = 0;
+        Texture ColorAttachment;
+    };
+
+    Texture CreateTexture(int width, int height);
+    Texture LoadTexture(const char* path);
+    Framebuffer CreateFramebufferWithTexture(const Texture texture);
+    bool AttachTextureToFramebuffer(Framebuffer& framebuffer, const Texture texture);
+    void BlitFramebufferToSwapchain(const Framebuffer framebuffer);
+
+
+}
