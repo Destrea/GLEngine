@@ -5,14 +5,22 @@
 
 #include "Core/Renderer/Renderer.h"
 #include "Core/Renderer/Shader.h"
-
+#include "Core/InputManager.h"
+#include "Core/ResourceManager.h"
+#include "Core/Renderer/Camera.h"
 #include <glm/glm.hpp>
+
 
 AppLayer::AppLayer()
 {
-    // Create shaders
-    m_Shader = Renderer::CreateGraphicsShader("Shaders/Vertex.glsl", "Shaders/Fragment.glsl");
+    //Create Shader and load it.
+    Renderer::Shader shader = Core::ResourceManager::LoadShader("Shaders/Vertex.glsl", "Shaders/Fragment.glsl", "test");
 
+    //m_Shader = newShader.CreateGraphicsShader("Shaders/Vertex.glsl", "Shaders/Fragment.glsl");
+    //newShader.ID = m_Shader;
+    p_Camera = std::make_shared<Camera>(glm::vec3(0.0f,0.0f,3.0f));
+    m_InputManager = std::make_shared<Core::InputManager>();
+    m_Window = Core::Application::Get().GetWindow();
     // Create geometry
     glCreateVertexArrays(1, &m_VertexArray);
     glCreateBuffers(1, &m_VertexBuffer);
@@ -57,11 +65,23 @@ AppLayer::~AppLayer()
 
 void AppLayer::OnUpdate(float ts)
 {
+    Core::InputManager::Get().processInput(m_Window->GetHandle(), p_Camera, ts);
 }
 
 void AppLayer::OnRender()
 {
-    glUseProgram(m_Shader);
+    Renderer::Shader newShader = Core::ResourceManager::GetShader("test");
+    newShader.Use();
+
+    glm::mat4 projection = glm::perspective(glm::radians(p_Camera->Zoom), (float)1920 / (float)1080, 0.1f, 100.0f);
+    glm::mat4 view = p_Camera->GetViewMatrix();
+
+    newShader.setMatrix4("projection", projection);
+    newShader.setMatrix4("view",view);
+
+    glm::mat4 model = glm::mat4(1.0f);
+    newShader.setMatrix4("model", model);
+
 
     // Uniforms
     glUniform1f(0, Core::Application::GetTime());

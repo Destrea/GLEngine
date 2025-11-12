@@ -2,8 +2,13 @@
 # Project Dependencies
 #
 
-# GLFW
 include(FetchContent)
+
+
+# OpenGL
+find_package(OpenGL REQUIRED)
+set(OpenGL_GL_PREFERENCE GLVND)
+# GLFW
 
 find_package(glfw 3.4 QUIET)
 if (NOT glfw3_FOUND)
@@ -20,25 +25,20 @@ if (NOT glfw3_FOUND)
     endif()
 endif()
 
-# OpenGL
-find_package(OpenGL REQUIRED)
-
-# GLAD
 
 
 # GLM
-find_package(glm 1.0.1 QUIET)
-if (NOT glm_FOUND)
-    FetchContent_Declare(
-            glm
-            DOWNLOAD_EXTRACT_TIMESTAMP OFF
-            URL https://github.com/g-truc/glm/archive/refs/tags/1.0.1.zip
-    )
-    FetchContent_GetProperties(glm)
-    if (NOT glm_POPULATED)
-        set(FETCHCONTENT_QUIET NO)
-        FetchContent_Populate(glm)
-        add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR})
-    endif()
+FetchContent_Declare(
+        glm
+        DOWNLOAD_EXTRACT_TIMESTAMP OFF
+        URL https://github.com/g-truc/glm/archive/refs/tags/1.0.1.zip
+)
+FetchContent_GetProperties(glm)
+if (NOT glm_POPULATED)
+    set(FETCHCONTENT_QUIET NO)
+    FetchContent_Populate(glm)
+    add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR})
 endif()
+
+
 set_target_properties(glm PROPERTIES FOLDER "Dependencies")

@@ -36,6 +36,8 @@ namespace Core {
 
 		glm::vec2 GetFramebufferSize() const;
 
+		std::shared_ptr<Window> GetWindow() const {return m_Window;}
+
 		static Application& Get();
 		static float GetTime();
 	private:
@@ -44,6 +46,8 @@ namespace Core {
 		bool m_Running = false;
 
 		std::vector<std::unique_ptr<Layer>> m_LayerStack;
+
+		friend class Layer;
 	};
 
 }

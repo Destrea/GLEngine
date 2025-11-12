@@ -86,6 +86,8 @@ namespace Core {
         return m_Window->GetFramebufferSize();
     }
 
+
+
     Application& Application::Get()
     {
         assert(s_Application);
