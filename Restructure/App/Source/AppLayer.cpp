@@ -65,7 +65,12 @@ AppLayer::~AppLayer()
 
 void AppLayer::OnUpdate(float ts)
 {
-    Core::InputManager::Get().processInput(m_Window->GetHandle(), p_Camera, ts);
+    //m_Time += ts;
+
+    if(glfwGetKey(Core::Application::Get().GetWindow()->GetHandle(), GLFW_KEY_1) == GLFW_PRESS)
+    {
+        //Hot-reload shader
+    }
 }
 
 void AppLayer::OnRender()
