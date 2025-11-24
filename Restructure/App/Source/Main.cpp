@@ -1,7 +1,7 @@
 #include "Core/Application.h"
 
 #include "AppLayer.h"
-
+#include "Core/ImGuiLayer.h"
 int main()
 {
     Core::ApplicationSpecification appSpec;
@@ -11,5 +11,6 @@ int main()
 
     Core::Application application(appSpec);
     application.PushLayer<AppLayer>();
+    application.PushLayer<ImGuiLayer>();
     application.Run();
 }

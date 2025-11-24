@@ -20,7 +20,6 @@ AppLayer::AppLayer()
     //newShader.ID = m_Shader;
     p_Camera = std::make_shared<Camera>(glm::vec3(0.0f,0.0f,3.0f));
     m_InputManager = std::make_shared<Core::InputManager>();
-    m_Window = Core::Application::Get().GetWindow();
     // Create geometry
     glCreateVertexArrays(1, &m_VertexArray);
     glCreateBuffers(1, &m_VertexBuffer);

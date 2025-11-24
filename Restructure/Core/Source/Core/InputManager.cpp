@@ -30,6 +30,7 @@ namespace Core {
     {
         if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
+
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS && get_cursor() == true)
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
