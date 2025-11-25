@@ -2,6 +2,8 @@
 
 #include "AppLayer.h"
 #include "Core/ImGuiLayer.h"
+
+//ADD - Main Game Loop handling and more.
 int main()
 {
     Core::ApplicationSpecification appSpec;

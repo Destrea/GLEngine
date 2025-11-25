@@ -10,6 +10,7 @@
 #include "Core/Renderer/Camera.h"
 #include <glm/glm.hpp>
 
+#include <print>
 
 AppLayer::AppLayer()
 {
@@ -62,6 +63,23 @@ AppLayer::~AppLayer()
     glDeleteProgram(m_Shader);
 }
 
+
+void AppLayer::OnEvent(Core::Event& event)
+{
+    std::println("{}", event.ToString());
+
+    Core::EventDispatcher dispatcher(event);
+
+    dispatcher.Dispatch<Core::MouseButtonPressedEvent>([this](Core::MouseButtonPressedEvent& e) {return OnMouseButtonPressed(e); });
+
+    dispatcher.Dispatch<Core::MouseMovedEvent>([this](Core::MouseMovedEvent& e) {return OnMouseMoved(e);});
+
+    dispatcher.Dispatch<Core::WindowClosedEvent>([this](Core::WindowClosedEvent& e) {return OnWindowClosed(e); });
+
+    dispatcher.Dispatch<Core::KeyPressedEvent>([this](Core::KeyPressedEvent& e) {return OnKeyPressed(e); });
+}
+
+
 void AppLayer::OnUpdate(float ts)
 {
     //m_Time += ts;
@@ -100,3 +118,47 @@ void AppLayer::OnRender()
     glBindVertexArray(m_VertexArray);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
+
+
+
+
+
+bool AppLayer::OnMouseButtonPressed(Core::MouseButtonPressedEvent& event)
+{
+
+    //Mouse button press handling.
+    //Double check with TheCherno github to see how its used.
+    return false;
+}
+
+bool AppLayer::OnMouseMoved(Core::MouseMovedEvent& event)
+{
+    //Mouse movement handling.
+    //m_MousePosition = {static_cast<float>(event.GetX()), static_cast<float>(event.GetY()) };
+
+    return false;
+}
+
+
+bool AppLayer::OnWindowClosed(Core::WindowClosedEvent& event)
+{
+    //Window closing Handling.
+    std::println("Window Closed!");
+
+    return false;
+}
+
+bool AppLayer::OnKeyPressed(Core::KeyPressedEvent& event)
+{
+    //Keyboard Input handling ONLY for AppLayer
+    if(event.GetKeyCode() == GLFW_KEY_J)
+    {
+        printf("\n\nPoggers!\n\n");
+    }
+
+    return false;
+}
+
+
+
+

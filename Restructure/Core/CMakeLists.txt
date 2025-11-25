@@ -35,6 +35,9 @@ Source/Core/Application.cpp
 Source/Core/Window.h
 Source/Core/Window.cpp
 Source/Core/Layer.h
+Source/Core/Event.h
+Source/Core/WindowEvents.h
+Source/Core/InputEvents.h
 Source/Core/InputManager.cpp
 Source/Core/InputManager.h
 Source/Core/ResourceManager.h

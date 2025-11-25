@@ -5,11 +5,13 @@
 ImGuiLayer::ImGuiLayer()
 {
     BeginEngineUI();
+    printf("Beginning ImGuiLayer!");
 }
 
 ImGuiLayer::~ImGuiLayer()
 {
     EndEngineUI();
+     printf("Killing ImGuiLayer!");
 }
 
 void ImGuiLayer::toggleHidden()

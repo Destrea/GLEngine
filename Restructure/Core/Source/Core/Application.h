@@ -2,6 +2,7 @@
 
 #include "Layer.h"
 #include "Window.h"
+#include "Event.h"
 
 #include <glm/glm.hpp>
 
@@ -26,6 +27,8 @@ namespace Core {
 
 		void Run();
 		void Stop();
+
+		void RaiseEvent(Event& event);
 
 		template<typename TLayer>
 		requires(std::is_base_of_v<Layer, TLayer>)
