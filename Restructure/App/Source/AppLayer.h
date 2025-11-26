@@ -9,7 +9,7 @@
 #include "Core/Renderer/Camera.h"
 #include "Core/InputEvents.h"
 #include "Core/WindowEvents.h"
-
+#include "Core/ImGuiLayer.h"
 #include <glm/glm.hpp>
 
 
@@ -34,10 +34,13 @@ private:
     uint32_t m_Shader = 0;
     uint32_t m_VertexArray = 0;
     uint32_t m_VertexBuffer = 0;
+    std::shared_ptr<ImGuiLayer> m_GuiLayer = nullptr;
     std::shared_ptr<Core::Window> m_Window = nullptr;
     std::shared_ptr<Camera> p_Camera = nullptr;
     std::shared_ptr<Core::InputManager> m_InputManager = nullptr;
 
     glm::vec2 m_MousePosition { 0.0f};
     glm::vec2 m_FlamePosition { 0.0f};
+
+    float deltaTime = 0.0;
 };

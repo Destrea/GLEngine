@@ -1,6 +1,7 @@
 
 #include "ImGuiLayer.h"
 #include "InputManager.h"
+#include <print>
 
 ImGuiLayer::ImGuiLayer()
 {
@@ -10,9 +11,30 @@ ImGuiLayer::ImGuiLayer()
 
 ImGuiLayer::~ImGuiLayer()
 {
-    EndEngineUI();
-     printf("Killing ImGuiLayer!");
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+    printf("Killing ImGuiLayer!");
 }
+
+
+void ImGuiLayer::OnEvent(Core::Event& event)
+{
+    //Debugging console output, tied to every event.
+    //std::println("{}", event.ToString());
+
+    Core::EventDispatcher dispatcher(event);
+
+    dispatcher.Dispatch<Core::MouseButtonPressedEvent>([this](Core::MouseButtonPressedEvent& e) {return OnMouseButtonPressed(e); });
+
+    dispatcher.Dispatch<Core::MouseMovedEvent>([this](Core::MouseMovedEvent& e) {return OnMouseMoved(e);});
+
+    dispatcher.Dispatch<Core::WindowClosedEvent>([this](Core::WindowClosedEvent& e) {return OnWindowClosed(e); });
+
+    dispatcher.Dispatch<Core::KeyPressedEvent>([this](Core::KeyPressedEvent& e) {return OnKeyPressed(e); });
+}
+
+
 
 void ImGuiLayer::toggleHidden()
 {
@@ -53,7 +75,9 @@ void ImGuiLayer::OnUpdate(float ts)
 
         ImGui::Render();
         ImGui::EndFrame();
+        ImGui::UpdatePlatformWindows();
     }
+
 
 }
 
@@ -104,9 +128,43 @@ void ImGuiLayer::BeginEngineUI()
 }
 
 
-void ImGuiLayer::EndEngineUI()
+
+
+bool ImGuiLayer::OnMouseButtonPressed(Core::MouseButtonPressedEvent& event)
 {
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+
+    //Mouse button press handling.
+    //Double check with TheCherno github to see how its used.
+    return false;
 }
+
+bool ImGuiLayer::OnMouseMoved(Core::MouseMovedEvent& event)
+{
+    //Mouse movement handling.
+
+    return false;
+}
+
+
+bool ImGuiLayer::OnWindowClosed(Core::WindowClosedEvent& event)
+{
+    //Window closing Handling.
+    std::println("Window Closed!");
+    ImGuiLayer::~ImGuiLayer();
+    return false;
+}
+
+bool ImGuiLayer::OnKeyPressed(Core::KeyPressedEvent& event)
+{
+    //Keyboard Input handling ONLY for AppLayer
+
+    if(event.GetKeyCode() == GLFW_KEY_J)
+    {
+        toggleHidden();
+    }
+
+    return false;
+}
+
+
+

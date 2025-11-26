@@ -8,7 +8,11 @@ namespace Core {
 
     InputManager::InputManager()
     {
+        float SCR_WIDTH = Core::Application::Get().GetSpec().WindowSpec.Width;
+        float SCR_HEIGHT = Core::Application::Get().GetSpec().WindowSpec.Height;
         s_InputManager = this;
+        lastX = SCR_WIDTH / 2.0f;
+        lastY = SCR_HEIGHT / 2.0f;
     }
 
     InputManager::~InputManager()
@@ -26,7 +30,7 @@ namespace Core {
         return cursor_locked;
     }
 
-    void InputManager::processInput(GLFWwindow* window, std::shared_ptr<Camera> p_Camera, float deltaTime)
+    void InputManager::processKeyboardInput(GLFWwindow* window, std::shared_ptr<Camera> p_Camera, float deltaTime)
     {
         if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
@@ -36,7 +40,6 @@ namespace Core {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             set_cursor(false);
         }
-
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             p_Camera->ProcessKeyboard(FORWARD, deltaTime);
@@ -48,11 +51,50 @@ namespace Core {
             p_Camera->ProcessKeyboard(RIGHT, deltaTime);
     }
 
+    void InputManager::processMouseInput(std::shared_ptr<Camera> p_Camera, double xposIn, double yposIn)
+    {
+
+        float xpos = static_cast<float>(xposIn);
+        float ypos = static_cast<float>(yposIn);
+
+        //If the cursor is locked in place, we process camera mouse input.
+        if(cursor_locked == true)
+        {
+
+            //Camera mouse calculations
+            if(firstMouse)
+            {
+                lastX = xpos;
+                lastY = ypos;
+                firstMouse = false;
+            }
+
+            float xOffset = xpos - lastX;
+            float yOffset = lastY - ypos;
+
+            lastX = xpos;
+            lastY = ypos;
+
+            p_Camera->ProcessMouseMovement(xOffset, yOffset);
+        }
+        else
+        {
+            //If the mouse isnt locked, we update the x and y pos so that the p_Camera doesnt whip when the mouse gets re-locked.
+            lastX = xpos;
+            lastY = ypos;
+        }
+
+    }
+
+
     InputManager& InputManager::Get()
     {
         assert(s_InputManager);
         return *s_InputManager;
     }
+
+
+    //Mouse Handling
 
 
 }

@@ -12,7 +12,8 @@ int main()
     appSpec.WindowSpec.Height = 1080;
 
     Core::Application application(appSpec);
-    application.PushLayer<AppLayer>();
-    application.PushLayer<ImGuiLayer>();
+    application.PushLayer<AppLayer>();          //Game Layer
+    application.PushLayer<ImGuiLayer>();        //Debug/Engine Layer
+    //application.PushLayer<HUDLayer>();        //Heads up Display/Menu Layer
     application.Run();
 }

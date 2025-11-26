@@ -6,17 +6,25 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_internal.h"
+
 #include "Layer.h"
 #include "Window.h"
+#include "InputEvents.h"
+#include "WindowEvents.h"
 #include "Application.h"
+
 #include <memory>
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
+
+
 class ImGuiLayer : public Core::Layer
 {
 public:
     ImGuiLayer();
     virtual ~ImGuiLayer();
+
+    virtual void OnEvent(Core::Event& event) override;
 
     virtual void OnUpdate(float ts) override;
     virtual void OnRender() override;
@@ -25,9 +33,14 @@ public:
     void EndEngineUI();
     void toggleHidden();
 private:
+    bool OnMouseButtonPressed(Core::MouseButtonPressedEvent& event);
+    bool OnMouseMoved(Core::MouseMovedEvent& event);
+    bool OnWindowClosed(Core::WindowClosedEvent& event);
+    bool OnKeyPressed(Core::KeyPressedEvent& event);
+
 
     GLFWwindow* window = nullptr;
     std::shared_ptr<Core::Window> m_Window = nullptr;
     ImGuiIO m_io;
-    bool m_IsHidden = false;
+    bool m_IsHidden = true;
 };

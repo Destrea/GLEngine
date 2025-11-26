@@ -24,6 +24,7 @@ namespace Core {
         s_Application = this;
 
         glfwSetErrorCallback(GLFWErrorCallback);
+        glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
         glfwInit();
 
         // Set window title to app name if empty

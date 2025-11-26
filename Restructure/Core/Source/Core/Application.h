@@ -42,6 +42,7 @@ namespace Core {
 		std::shared_ptr<Window> GetWindow() const {return m_Window;}
 
 		static Application& Get();
+		ApplicationSpecification GetSpec() {return m_Specification; }
 		static float GetTime();
 	private:
 		ApplicationSpecification m_Specification;

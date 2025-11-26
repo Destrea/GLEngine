@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include "Renderer/Camera.h"
 #include "Layer.h"
+#include "Application.h"
 #include <memory>
 
 namespace Core
@@ -17,14 +18,19 @@ namespace Core
 
         bool get_cursor();
         void set_cursor(bool val);
-        void processInput(GLFWwindow *window, std::shared_ptr<Camera> p_Camera, float deltaTime);
+        void processKeyboardInput(GLFWwindow *window, std::shared_ptr<Camera> p_Camera, float deltaTime);
+        void processMouseInput(std::shared_ptr<Camera> p_Camera, double xposIn, double yposIn);
 
-
-        bool cursor_locked = false;
+        bool cursor_locked = true;
 
         static InputManager& Get();
 
     private:
+
+        //Mouse Variables
+        float lastX;
+        float lastY;
+        bool firstMouse = true;
 
     };
 
