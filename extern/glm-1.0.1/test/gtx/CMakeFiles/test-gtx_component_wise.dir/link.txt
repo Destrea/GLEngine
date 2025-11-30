@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtx_component_wise.dir/link.d "CMakeFiles/test-gtx_component_wise.dir/gtx_component_wise.cpp.o" -o test-gtx_component_wise  ../../glm/libglm.a

@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtx_matrix_operation.dir/link.d "CMakeFiles/test-gtx_matrix_operation.dir/gtx_matrix_operation.cpp.o" -o test-gtx_matrix_operation  ../../glm/libglm.a

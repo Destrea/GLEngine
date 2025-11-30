@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-ext_scalar_constants.dir/link.d "CMakeFiles/test-ext_scalar_constants.dir/ext_scalar_constants.cpp.o" -o test-ext_scalar_constants  ../../glm/libglm.a

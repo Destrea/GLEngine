@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtx_optimum_pow.dir/link.d "CMakeFiles/test-gtx_optimum_pow.dir/gtx_optimum_pow.cpp.o" -o test-gtx_optimum_pow  ../../glm/libglm.a

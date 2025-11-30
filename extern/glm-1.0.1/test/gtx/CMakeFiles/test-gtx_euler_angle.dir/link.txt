@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtx_euler_angle.dir/link.d "CMakeFiles/test-gtx_euler_angle.dir/gtx_euler_angle.cpp.o" -o test-gtx_euler_angle  ../../glm/libglm.a

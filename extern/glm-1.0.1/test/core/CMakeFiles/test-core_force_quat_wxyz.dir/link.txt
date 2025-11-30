@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-core_force_quat_wxyz.dir/link.d "CMakeFiles/test-core_force_quat_wxyz.dir/core_force_quat_wxyz.cpp.o" -o test-core_force_quat_wxyz  ../../glm/libglm.a

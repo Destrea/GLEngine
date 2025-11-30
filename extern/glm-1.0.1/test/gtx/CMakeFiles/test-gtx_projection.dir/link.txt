@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtx_projection.dir/link.d "CMakeFiles/test-gtx_projection.dir/gtx_projection.cpp.o" -o test-gtx_projection  ../../glm/libglm.a

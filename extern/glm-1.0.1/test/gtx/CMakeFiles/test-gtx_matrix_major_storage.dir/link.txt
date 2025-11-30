@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtx_matrix_major_storage.dir/link.d "CMakeFiles/test-gtx_matrix_major_storage.dir/gtx_matrix_major_storage.cpp.o" -o test-gtx_matrix_major_storage  ../../glm/libglm.a

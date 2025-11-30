@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtx_string_cast.dir/link.d "CMakeFiles/test-gtx_string_cast.dir/gtx_string_cast.cpp.o" -o test-gtx_string_cast  ../../glm/libglm.a

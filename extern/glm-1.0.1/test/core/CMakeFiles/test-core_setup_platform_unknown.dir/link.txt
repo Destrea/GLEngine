@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-core_setup_platform_unknown.dir/link.d "CMakeFiles/test-core_setup_platform_unknown.dir/core_setup_platform_unknown.cpp.o" -o test-core_setup_platform_unknown  ../../glm/libglm.a

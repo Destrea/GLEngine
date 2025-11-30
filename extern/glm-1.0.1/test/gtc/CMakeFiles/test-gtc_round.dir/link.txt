@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtc_round.dir/link.d "CMakeFiles/test-gtc_round.dir/gtc_round.cpp.o" -o test-gtc_round  ../../glm/libglm.a

@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-ext_vector_ulp.dir/link.d "CMakeFiles/test-ext_vector_ulp.dir/ext_vector_ulp.cpp.o" -o test-ext_vector_ulp  ../../glm/libglm.a

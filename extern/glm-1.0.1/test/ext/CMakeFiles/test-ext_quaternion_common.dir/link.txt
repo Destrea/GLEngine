@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-ext_quaternion_common.dir/link.d "CMakeFiles/test-ext_quaternion_common.dir/ext_quaternion_common.cpp.o" -o test-ext_quaternion_common  ../../glm/libglm.a

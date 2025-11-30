@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-gtx_texture.dir/link.d "CMakeFiles/test-gtx_texture.dir/gtx_texture.cpp.o" -o test-gtx_texture  ../../glm/libglm.a

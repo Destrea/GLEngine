@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-core_func_trigonometric.dir/link.d "CMakeFiles/test-core_func_trigonometric.dir/core_func_trigonometric.cpp.o" -o test-core_func_trigonometric  ../../glm/libglm.a

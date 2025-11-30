@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-bug_ms_vec_static.dir/link.d "CMakeFiles/test-bug_ms_vec_static.dir/bug_ms_vec_static.cpp.o" -o test-bug_ms_vec_static  ../../glm/libglm.a

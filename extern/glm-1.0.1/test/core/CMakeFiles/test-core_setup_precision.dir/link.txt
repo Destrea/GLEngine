@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/test-core_setup_precision.dir/link.d "CMakeFiles/test-core_setup_precision.dir/core_setup_precision.cpp.o" -o test-core_setup_precision  ../../glm/libglm.a
