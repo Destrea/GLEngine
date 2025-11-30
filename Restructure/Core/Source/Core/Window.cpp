@@ -41,6 +41,10 @@ namespace Core {
 			assert(false);
 		}
 
+		glfwSwapInterval(m_Specification.VSync ? 1 : 0);
+
+		glEnable(GL_DEPTH_TEST);
+
 		glfwSetWindowUserPointer(m_Handle, this);
 
 		glfwSetWindowCloseCallback(m_Handle, [](GLFWwindow* handle)
@@ -110,7 +114,6 @@ namespace Core {
 		});
 
 
-		glfwSwapInterval(m_Specification.VSync ? 1 : 0);
 	}
 
 	void Window::Destroy()

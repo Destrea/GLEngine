@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <memory>
+#include <vector>
 #include "Core/Layer.h"
 #include "Core/Window.h"
 #include "Core/InputManager.h"
@@ -10,7 +11,9 @@
 #include "Core/InputEvents.h"
 #include "Core/WindowEvents.h"
 #include "Core/ImGuiLayer.h"
+#include "Core/ResourceManager.h"
 #include <glm/glm.hpp>
+#include "Core/Renderer/Model.h"
 
 
 class AppLayer : public Core::Layer
@@ -23,7 +26,7 @@ public:
 
     virtual void OnUpdate(float ts) override;
     virtual void OnRender() override;
-
+    std::vector<Model> maps;
 
 private:
     bool OnMouseButtonPressed(Core::MouseButtonPressedEvent& event);
@@ -38,6 +41,7 @@ private:
     std::shared_ptr<Core::Window> m_Window = nullptr;
     std::shared_ptr<Camera> p_Camera = nullptr;
     std::shared_ptr<Core::InputManager> m_InputManager = nullptr;
+    std::shared_ptr<Core::ResourceManager> m_ResourceManager = nullptr;
 
     glm::vec2 m_MousePosition { 0.0f};
     glm::vec2 m_FlamePosition { 0.0f};

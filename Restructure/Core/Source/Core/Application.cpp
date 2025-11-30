@@ -54,7 +54,9 @@ namespace Core {
         m_Running = true;
 
         float lastTime = GetTime();
-
+        float deltaTime = 0;
+        float currentTime = 0;
+        int frames = 0;
         // Main Application loop
         while (m_Running)
         {
@@ -66,13 +68,15 @@ namespace Core {
                 break;
             }
 
-            float currentTime = GetTime();
-            float timestep = glm::clamp(currentTime - lastTime, 0.001f, 0.1f);
+            currentTime = GetTime();
+
+            deltaTime = glm::clamp(currentTime - lastTime, 0.001f, 0.1f);
             lastTime = currentTime;
+
 
             // Main layer update here
             for (const std::unique_ptr<Layer>& layer : m_LayerStack)
-                layer->OnUpdate(timestep);
+                layer->OnUpdate(deltaTime);
 
             // NOTE: rendering can be done elsewhere (eg. render thread)
             for (const std::unique_ptr<Layer>& layer : m_LayerStack)

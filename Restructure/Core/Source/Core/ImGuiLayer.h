@@ -32,6 +32,7 @@ public:
     void BeginEngineUI();
     void EndEngineUI();
     void toggleHidden();
+    void GetFPS();
 private:
     bool OnMouseButtonPressed(Core::MouseButtonPressedEvent& event);
     bool OnMouseMoved(Core::MouseMovedEvent& event);
@@ -42,5 +43,7 @@ private:
     GLFWwindow* window = nullptr;
     std::shared_ptr<Core::Window> m_Window = nullptr;
     ImGuiIO m_io;
-    bool m_IsHidden = true;
+    bool m_IsHidden = false;
+    float m_Timestep;
+    float m_Time = 0.0f;
 };

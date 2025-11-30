@@ -44,6 +44,8 @@ Source/Core/ResourceManager.h
 Source/Core/ResourceManager.cpp
 Source/Core/ImGuiLayer.h
 Source/Core/ImGuiLayer.cpp
+
+
 Source/Core/Renderer/Renderer.h
 Source/Core/Renderer/Renderer.cpp
 Source/Core/Renderer/Shader.h
@@ -51,6 +53,8 @@ Source/Core/Renderer/Shader.cpp
 Source/Core/Renderer/Texture.h
 Source/Core/Renderer/Texture.cpp
 Source/Core/Renderer/Camera.h
+Source/Core/Renderer/Model.h
+Source/Core/Renderer/Mesh.h
 
 )
 
@@ -67,12 +71,7 @@ add_compile_definitions(
 
 target_link_libraries(Core glfw)
 target_link_libraries(Core glm)
+target_link_libraries(Core assimp)
 
 target_include_directories(Core PUBLIC "Source" "vendor/stb" "vendor/glad/include" "vendor/ImGui")
 
-
-add_custom_target(copy_resources ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${PROJECT_SOURCE_DIR}/App/Shaders
-    ${PROJECT_BINARY_DIR}/App/Shaders
-    COMMENT "Copying resources into binary directory")

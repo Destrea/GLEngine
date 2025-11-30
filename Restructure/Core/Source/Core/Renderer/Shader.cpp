@@ -302,11 +302,25 @@ namespace Renderer {
 		}
 		else
 		{
+			GLint isLinked = 0;
 			glGetProgramiv(object, GL_LINK_STATUS, &success);
 			if(!success)
 			{
-				glGetShaderInfoLog(object, 1024, NULL, infoLog);
-				std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+				glGetProgramiv(object, GL_LINK_STATUS, (int*)&isLinked);
+				if (isLinked == GL_FALSE)
+				{
+					GLint maxLength = 0;
+					glGetProgramiv(object, GL_INFO_LOG_LENGTH, &maxLength);
+
+					std::vector<GLchar> infoLog(maxLength);
+					glGetProgramInfoLog(object, maxLength, &maxLength, &infoLog[0]);
+
+					std::cerr << infoLog.data() << std::endl;
+
+					glDeleteProgram(object);
+
+
+				}
 			}
 		}
 	}

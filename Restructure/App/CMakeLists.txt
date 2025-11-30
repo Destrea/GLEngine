@@ -27,3 +27,9 @@ target_include_directories(App PRIVATE Source)
 set_target_properties(App PROPERTIES
     VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/App"
 )
+
+add_custom_target(copy_resources ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${PROJECT_SOURCE_DIR}/App/Resources
+    ${PROJECT_BINARY_DIR}/App/Resources
+    COMMENT "Copying resources into binary directory")

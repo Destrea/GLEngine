@@ -43,42 +43,7 @@ void ImGuiLayer::toggleHidden()
 
 void ImGuiLayer::OnUpdate(float ts)
 {
-
-    if(!m_IsHidden)
-    {
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        if(ImGui::BeginMainMenuBar())
-        {
-            if(ImGui::BeginMenu("File"))
-            {
-                if(ImGui::BeginMenu("LevelEditor"))
-                {
-                    if(ImGui::MenuItem("Export")){}
-
-
-                    //ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-                    //ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
-
-
-                    ImGui::EndMenu();
-                }
-                ImGui::EndMenu();
-            }
-            ImGui::EndMainMenuBar();
-        }
-
-        ImGui::ShowDemoWindow();
-
-        ImGui::Render();
-        ImGui::EndFrame();
-        ImGui::UpdatePlatformWindows();
-    }
-
-
+    m_Timestep = ts;
 }
 
 
@@ -86,19 +51,38 @@ void ImGuiLayer::OnUpdate(float ts)
 
 void ImGuiLayer::OnRender()
 {
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    if(ImGui::BeginMainMenuBar())
+    {
+        if(ImGui::BeginMenu("File"))
+        {
+            ImGui::MenuItem("Wowie!");
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+    }
+
+    //ImGui::ShowDemoWindow();
+
+    if(ImGui::Begin("Debug"))
+    {
+        ImGui::Text("FPS: %f", 1.0f / m_Timestep);
+        ImGui::End();
+    }
+
+    ImGui::Render();
+    ImGui::EndFrame();
+    ImGui::UpdatePlatformWindows();
+    ImGui::RenderPlatformWindowsDefault();
+
     //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     if(!m_IsHidden)
-    {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        if(m_io.ConfigFlags && ImGuiConfigFlags_ViewportsEnable)
-        {
-            GLFWwindow * backup_current_context = glfwGetCurrentContext();
-            ImGui::UpdatePlatformWindows();
-            ImGui::RenderPlatformWindowsDefault();
-            glfwMakeContextCurrent(backup_current_context);
-        }
-    }
+
 }
 
 void ImGuiLayer::BeginEngineUI()
@@ -106,7 +90,6 @@ void ImGuiLayer::BeginEngineUI()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     static ImGuiIO& io = ImGui::GetIO(); (void) io;
-    m_io = io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
@@ -120,6 +103,9 @@ void ImGuiLayer::BeginEngineUI()
         style.WindowRounding = 0.0f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
+
+
+
 
     window = Core::Application::Get().GetWindow()->GetHandle();
     //ImGui window handling
@@ -166,5 +152,9 @@ bool ImGuiLayer::OnKeyPressed(Core::KeyPressedEvent& event)
     return false;
 }
 
+void ImGuiLayer::GetFPS()
+{
 
+
+}
 

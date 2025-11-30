@@ -8,26 +8,42 @@
 #include "Core/InputManager.h"
 #include "Core/ResourceManager.h"
 #include "Core/Renderer/Camera.h"
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Core/Renderer/Model.h"
 
 #include <print>
 
 AppLayer::AppLayer()
 {
     //Create Shader and load it.
-    Renderer::Shader shader = Core::ResourceManager::LoadShader("Shaders/Vertex.glsl", "Shaders/Frag.glsl", "test");
-    Renderer::Texture2D testTex = Core::ResourceManager::LoadTexture("Textures/wall.jpg", false, "wall");
+
+
+    Renderer::Shader shader = Core::ResourceManager::LoadShader("Resources/Shaders/Vertex.glsl", "Resources/Shaders/Frag.glsl", "test");
+    printf("Shader compile debug");
+    Renderer::Texture2D testTex = Core::ResourceManager::LoadTexture("Resources/Textures/wall.jpg", false, "wall");
     //m_GuiLayer = std::make_shared<ImGuiLayer>();
+
+
 
     p_Camera = std::make_shared<Camera>(glm::vec3(0.0f,0.0f,3.0f));
     m_InputManager = std::make_shared<Core::InputManager>();
+    //m_ResourceManager = std::make_shared<Core::ResourceManager>();
     //Disable cursor by default.
     glfwSetInputMode(Core::Application::Get().GetWindow()->GetHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
+    //Core::MapScene test("Resources/Maps/unnamed.map", "testMap");
+    //maps.push_back(test);
+
+    Model test("Resources/Maps/unnamed.obj");
+    maps.push_back(test);
+    Renderer::Texture2D tex = Core::ResourceManager::GetTexture("wall");
+    shader.setInteger("texture1", tex.ID);
+
+
+#if OLD
     // Create geometry
     glCreateVertexArrays(1, &m_VertexArray);
     glCreateBuffers(1, &m_VertexBuffer);
@@ -62,8 +78,9 @@ AppLayer::AppLayer()
     glVertexArrayAttribBinding(m_VertexArray, 0, 0);
     glVertexArrayAttribBinding(m_VertexArray, 1, 0);
 
-    Renderer::Texture2D tex = Core::ResourceManager::GetTexture("wall");
-    shader.setInteger("texture1", tex.ID);
+
+
+#endif
 
 }
 
@@ -104,19 +121,22 @@ void AppLayer::OnUpdate(float ts)
 
 void AppLayer::OnRender()
 {
-    Renderer::Shader newShader = Core::ResourceManager::GetShader("test");
-    newShader.Use();
-    Renderer::Texture2D tex = Core::ResourceManager::GetTexture("wall");
 
+    Renderer::Shader newShader = Core::ResourceManager::GetShader("test");
+
+    Renderer::Texture2D tex = Core::ResourceManager::GetTexture("wall");
 
     glm::mat4 projection = glm::perspective(glm::radians(p_Camera->Zoom), (float)1920 / (float)1080, 0.1f, 100.0f);
     glm::mat4 view = p_Camera->GetViewMatrix();
 
     newShader.setMatrix4("projection", projection);
     newShader.setMatrix4("view", view);
-
     glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(0.0f, -5.0f, 0.0f)); // translate it down so it's at the center of the scene
+    model = glm::scale(model, glm::vec3(1.0f/20.0f, 1.0f/20.0f, 1.0f/20.0f));	// it's a bit too big for our scene, so scale it down
     newShader.setMatrix4("model", model);
+
+    //Core::MapScene test = maps[0];
 
 
     //Uniforms
@@ -127,8 +147,8 @@ void AppLayer::OnRender()
 
     //glViewport(0, 0, static_cast<GLsizei>(framebufferSize.x), static_cast<GLsizei>(framebufferSize.y));
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, tex.ID);
+    //glActiveTexture(GL_TEXTURE0);
+    //glBindTexture(GL_TEXTURE_2D, tex.ID);
 
 
 
@@ -136,11 +156,17 @@ void AppLayer::OnRender()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
+    newShader.Use();
+    maps[0].Draw(newShader);
+
+
+    //test.DrawMap(newShader);
+
     // Render
-    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glBindTexture(GL_TEXTURE_2D, tex.ID);
-    glBindVertexArray(m_VertexArray);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    //tex.IDglBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //glBindTexture(GL_TEXTURE_2D, tex.ID);
+    //glBindVertexArray(m_VertexArray);
+    //glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 

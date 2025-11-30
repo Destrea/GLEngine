@@ -40,5 +40,22 @@ if (NOT glm_POPULATED)
     add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR})
 endif()
 
-
 set_target_properties(glm PROPERTIES FOLDER "Dependencies")
+
+
+
+# Assimp
+FetchContent_Declare(
+        assimp
+        DOWNLOAD_EXTRACT_TIMESTAMP OFF
+        URL https://github.com/assimp/assimp/archive/refs/tags/v6.0.2.zip
+)
+FetchContent_GetProperties(assimp)
+if (NOT assimp_POPULATED)
+    set(FETCHCONTENT_QUIET NO)
+    FetchContent_Populate(assimp)
+    add_subdirectory(${assimp_SOURCE_DIR} ${assimp_BINARY_DIR})
+endif()
+
+
+
