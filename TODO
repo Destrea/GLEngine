@@ -1,40 +1,10 @@
 
+TODO:
+============================================================
+3D collision Detection
 
-3D collisions:
-    - https://www.peroxide.dk/papers/collision/collision.pdf
-    - Above is an (older) write up on collisions using vector-space calculations. This is relevant for D3D and OpenGL
-    - Implement collisions using information from the level txt file, and implement collision for the player "body"/camera
+Object Manager and Entity Component System
 
-ImGui:
-    - Implement saving settings, docking layout, etc to the ini file correctly, and allow it to also be loaded
-    - Implement a "preferences" menu, and saving the preferences, for font, font size, text color, etc.
+Base audio Implementation
 
-
-Level Editor:
-    - using the ImGui integration, implement a "level editor" that can save the vertex, and texcoord, data to a specified .txt file,
-        so that it can be used by LevelLoader afterwards.
-
-    Create "edge" drawing, between vertices
-    Each vertex between that edge drawn will correspond to a location value, x,y.
-        These locations will be the pixel location of the vertex, divided by 64 (the pixel width between grid corners), and each one will correspond to "0.5" length in OpenGL.
-        Additionally, for now, all Z values will be initialized so that the walls are properly square, with "1.0" distance between the floor and ceiling.
-            This willl eventually change, as the level editor becomes more fleshed out.
-
-    list option:
-        "Draw", "Connect" and "Erase"
-
-
-    Moving:
-        Check if vertex exists near the point hovered (Snapped to nearest grid mark)
-        If it does, allow it to move.
-
-
-
-
-
-LevelLoader:
-    (?)- Find a way to rework things to allow for non-euclidean geometry or rendering.
-
-
-Other:
-    - Migrate over to Cmake, and set up Cmake files that wwill download dependencies, and work platform agnostically.
+Config/Settings File reading/writing
