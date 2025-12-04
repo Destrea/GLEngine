@@ -26,4 +26,4 @@ The Cherno's GameEngine Series: https://www.youtube.com/@TheCherno <br>
   make
 </pre>
 
-On Windows, you can additionally open the file as a project, and build it with Visual Studio.
+On Windows, you can additionally open the CMakeLists.txt file in the root directory as a project, and build it with Visual Studio.
