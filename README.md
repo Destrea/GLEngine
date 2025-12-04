@@ -16,3 +16,14 @@ Cmake: https://cmake.org <br>
 ## References & Resources used: <br>
 LearnOpenGL: https://learnopengl.com <br>
 The Cherno's GameEngine Series: https://www.youtube.com/@TheCherno <br>
+
+
+# Build Instructions
+<pre>
+  mkdir build
+  cd build
+  cmake ..
+  make
+</pre>
+
+On Windows, you can additionally open the file as a project, and build it with Visual Studio.
